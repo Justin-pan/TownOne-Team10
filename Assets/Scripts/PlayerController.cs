@@ -18,8 +18,11 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D m_Rigidbody2D;
     private Collider2D m_Collider2D;
 
-    private Vector3 m_Velocity;
+    private Vector2 m_TargetVelocity;
+    private Vector2 m_Velocity;
+
     private bool m_IsGrounded;
+    private bool m_IsFacingRight;
 
     private void Awake()
     {
@@ -27,16 +30,42 @@ public class PlayerController : MonoBehaviour
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_Collider2D = GetComponent<Collider2D>();
 
-        m_Velocity = Vector3.zero;
+        m_TargetVelocity = Vector2.zero;
+        m_Velocity = Vector2.zero;
+
         m_IsGrounded = false;
+        m_IsFacingRight = true;
+}
+
+    private void Update()
+    {
+        float move = Input.GetAxis("Horizontal");
+        bool jump = Input.GetButtonDown("Jump");
+
+        m_TargetVelocity = new(move * m_MoveSpeed, m_Rigidbody2D.velocity.y);
+
+        if (m_IsGrounded && jump)
+        {
+            m_Rigidbody2D.AddForce(m_JumpSpeed * Vector2.up);
+            m_IsGrounded = false;
+        }
+
+        if (m_IsFacingRight ? move < 0 : move > 0)
+        {
+            m_SpriteRenderer.flipX = !m_SpriteRenderer.flipX;
+            m_IsFacingRight = !m_IsFacingRight;
+        }
     }
 
     private void FixedUpdate()
     {
-        m_IsGrounded = false;
-
+        m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, m_TargetVelocity, ref m_Velocity, 
+            1 - (m_IsGrounded ? m_Traction : m_AirTraction));
+        
         Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position + (m_Collider2D.bounds.extents.y * Vector3.down),
             Vector3.right + (m_GroundCheckHeight * Vector3.up), 0);
+
+        m_IsGrounded = false;
 
         foreach (Collider2D collider in colliders)
         {
@@ -44,23 +73,6 @@ public class PlayerController : MonoBehaviour
             {
                 m_IsGrounded = true;
             }
-        }
-
-        Move(Input.GetAxis("Horizontal"), Input.GetButtonDown("Jump"));
-    }
-
-    private void Move(float move, bool jump)
-    {
-        Vector3 targetVelocity = (move * m_MoveSpeed * Vector3.right) + (m_Rigidbody2D.velocity.y * Vector3.up);
-        m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity,
-            1 - (m_IsGrounded ? m_Traction : m_AirTraction));
-
-        m_SpriteRenderer.flipX = m_Rigidbody2D.velocity.x > 0;
-
-        if (m_IsGrounded && jump)
-        {
-            m_Rigidbody2D.AddForce(m_JumpSpeed * Vector2.up);
-            m_IsGrounded = false;
         }
     }
 }
