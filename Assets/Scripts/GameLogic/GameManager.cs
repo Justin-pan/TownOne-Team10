@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static readonly int GAME_WIDTH = 8; 
+    public static readonly int GAME_HEIGHT = 20; // the width and height of the region in which placeables can be placed, in game units
+
     [SerializeField]
     private List<Player> players;
 
@@ -25,10 +28,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
 
-    private List<Placeable> placedPlaceables;
-    private Dictionary<Placeable, List<Vector3>> placeableGamePositionsDic; // Keys: each placeable currently placed;
-                                                                            // Values: the game positions of the squares they
-                                                                            //         take up
+    private List<Placeable> placedPlaceables = new List<Placeable>();
+    private Dictionary<Vector3, Placeable> gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>(); 
+                                                                      // Keys: positions at which a placeable exists
+                                                                      // Values: the placeable at that location
 
     private static GameManager instance = null;
 
@@ -72,39 +75,27 @@ public class GameManager : MonoBehaviour
         finishOrder.Add(player);
     }
 
-    // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates.
-    // Returns the success of this action.
-    public bool TryPlace(Placeable placeable, Vector3 originPosition)
+    // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates
+    // (rawOriginPosition after snapping). Returns the success of this action.
+    public bool TryPlace(Placeable placeable, Vector3 rawOriginPosition)
     {
-        if (!IsPlacementValid(placeable, originPosition))
+        Vector3 originPosition = SnapToGamePosition(rawOriginPosition);
+
+        if (!placeable.IsPlacementValid(originPosition, placedPlaceables, gamePositionPlaceableDic))
         {
             return false;
         }
 
         GameObject newPlacedGameObject = Instantiate(placeable.gameObject);
-        newPlacedGameObject.transform.parent = placeablesRoot.transform;
-        newPlacedGameObject.transform.position = placeable.GetCenterInWorldCoordinates();
-        placeable.SetOriginPosition(originPosition);
-        placedPlaceables.Add(placeable);
-        placeableGamePositionsDic.Add(placeable, placeable.GetSpaceTakenGameCoordinates());s
-        return true;
-    }
+        Placeable newPlacedPlaceable = newPlacedGameObject.GetComponent<Placeable>();
 
-    // takes in a placeable and the origin position (bottom left square), in game coordinates, that
-    // we wish it to be placed at, and returns true if that placement is valid i.e. there are no other placeables currently placed
-    // obstructing the placement
-    public bool IsPlacementValid(Placeable placeable, Vector3 originPosition)
-    {
-        List<Vector3> newPlaceablePositions = placeable.GetSpaceTakenGameCoordinates();
-        foreach (List<Vector3> takenPositionList in placeableGamePositionsDic.Values)
+        newPlacedPlaceable.SetOriginPosition(originPosition);
+        newPlacedGameObject.transform.parent = placeablesRoot.transform;
+        newPlacedGameObject.transform.position = newPlacedPlaceable.GetCenterInWorldCoordinates();
+        placedPlaceables.Add(newPlacedPlaceable);
+        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTakenGameCoordinates())
         {
-            foreach (Vector3 takenPosition in takenPositionList)
-            {
-                if (newPlaceablePositions.Contains(takenPosition))
-                {
-                    return false;
-                }
-            }
+            gamePositionPlaceableDic.Add(pos, newPlacedPlaceable);
         }
         return true;
     }
@@ -112,14 +103,14 @@ public class GameManager : MonoBehaviour
     // returns the world position (i.e. center) of the tile that contains rawPosition
     public static Vector3 SnapToWorldPosition(Vector3 rawPosition)
     {
-        Vector3 snappedPosition = new Vector3((float) Math.Floor(rawPosition.x) + 0.5f, (float)Math.Floor(rawPosition.x) + 0.5f, 0);
+        Vector3 snappedPosition = new Vector3((float) Math.Floor(rawPosition.x) + 0.5f, (float)Math.Floor(rawPosition.y) + 0.5f, 0);
         return snappedPosition;
     }
 
     // returns the game position (i.e. bottom-left) of the tile that contains rawPosition
     public static Vector3 SnapToGamePosition(Vector3 rawPosition)
     {
-        Vector3 snappedPosition = new Vector3((float)Math.Floor(rawPosition.x), (float)Math.Floor(rawPosition.x), 0);
+        Vector3 snappedPosition = new Vector3((float)Math.Floor(rawPosition.x), (float)Math.Floor(rawPosition.y), 0);
         return snappedPosition;
     }
 }
