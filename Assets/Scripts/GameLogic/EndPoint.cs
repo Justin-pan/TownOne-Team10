@@ -22,6 +22,7 @@ public class EndPoint : MonoBehaviour
 
         if (player != null)
         {
+            Debug.Log("A player has finished");
             GameManager.Instance.FinishPlayer(player);
         }
     }
