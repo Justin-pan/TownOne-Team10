@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicPerk : MonoBehaviour
+public class Perk : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
