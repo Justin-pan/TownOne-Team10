@@ -1,79 +1,113 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Technical")]
-    [SerializeField] private float m_GroundCheckHeight;
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius;
 
     [Header("Parameters")]
-    [SerializeField] private float m_MoveSpeed;
-    [SerializeField] private float m_DashSpeed;
-    [SerializeField] private float m_JumpSpeed;
+    [SerializeField] private float moveSpeed;
+    [SerializeField] private float jumpSpeed;
 
-    [Range(0, 1)][SerializeField] private float m_Traction;
-    [Range(0, 1)][SerializeField] private float m_AirTraction;
+    [SerializeField] private float dashSpeed;
+    [SerializeField] private float dashDuration;
 
-    private SpriteRenderer m_SpriteRenderer;
-    private Rigidbody2D m_Rigidbody2D;
-    private Collider2D m_Collider2D;
+    [Range(0, 1)][SerializeField] private float traction;
+    [Range(0, 1)][SerializeField] private float airTraction;
 
-    private float m_TargetSpeed;
+    // [Components]
+    private Rigidbody2D mRigidbody2D;
 
-    private bool m_IsGrounded;
-    private bool m_IsFacingRight;
+    private Vector2 currentVelocity;
+
+    private bool isGrounded;
+    private bool isDashing;
+
+    private bool canDash;
 
     private void Awake()
     {
-        m_SpriteRenderer = GetComponent<SpriteRenderer>();
-        m_Rigidbody2D = GetComponent<Rigidbody2D>();
-        m_Collider2D = GetComponent<Collider2D>();
+        mRigidbody2D = GetComponent<Rigidbody2D>();
 
-        m_TargetSpeed = 0;
-
-        m_IsGrounded = false;
-        m_IsFacingRight = true;
-}
+        currentVelocity = Vector2.zero;
+        isGrounded = isDashing = canDash = false;
+    }
 
     private void Update()
     {
-        float inputMove = Input.GetAxis("Horizontal");
-        bool inputJump = Input.GetButtonDown("Jump");
-
-        m_TargetSpeed = inputMove * m_MoveSpeed;
-
-        if (inputJump && m_IsGrounded)
+        // Ignore player input while dashing.
+        if (isDashing)
         {
-            // m_Rigidbody2D.velocity = new(m_Rigidbody2D.velocity.y, m_JumpSpeed);
-
-            m_Rigidbody2D.AddForce(m_JumpSpeed * Vector2.up, ForceMode2D.Impulse);
-            m_IsGrounded = false;
+            return;
         }
 
-        // Update the sprite to match the input direction.
-        if (m_IsFacingRight ? m_TargetSpeed < 0 : m_TargetSpeed > 0)
-        {
-            m_SpriteRenderer.flipX = !m_SpriteRenderer.flipX;
-            m_IsFacingRight = !m_IsFacingRight;
-        }
+        HandleMove(Input.GetAxis("Horizontal"), Input.GetButtonDown("Jump"));
+        HandleDash(Input.GetAxis("Horizontal"), Input.GetButton("Jump"), Input.GetButtonDown("Dash"));
     }
 
     private void FixedUpdate()
     {
-        // m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, m_TargetVelocity, ref m_Velocity, 
-        //     1 - (m_IsGrounded ? m_Traction : m_AirTraction));
-        
-        // TODO: Better collision check method?
-        Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position + (m_Collider2D.bounds.extents.y * Vector3.down),
-            0.9f * Vector3.right + (m_GroundCheckHeight * Vector3.up), 0);
+        // Check if there is anything underneath the player.
+        isGrounded = false;
 
-        float speed = m_TargetSpeed - m_Rigidbody2D.velocity.x;
-        m_Rigidbody2D.AddForce(speed * (m_IsGrounded ? m_Traction : m_AirTraction) * Vector2.right, ForceMode2D.Impulse);
-
-        m_IsGrounded = false;
-        foreach (Collider2D collider in colliders)
+        foreach (Collider2D c in Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius))
         {
-            m_IsGrounded |= collider.gameObject != gameObject;
+            if (c.gameObject != gameObject)
+            {
+                isGrounded = canDash = true;
+            }
         }
+    }
+
+    private void HandleMove(float inputDirection, bool inputJump)
+    {
+        Vector3 target = mRigidbody2D.velocity;
+        target.x = inputDirection * moveSpeed;
+
+        mRigidbody2D.velocity = Vector2.SmoothDamp(mRigidbody2D.velocity, target, ref currentVelocity,
+            isGrounded ? 1 - traction : 1 - airTraction);
+        
+        if (isGrounded && inputJump)
+        {
+            Vector3 velocity = currentVelocity;
+            velocity.y = jumpSpeed;
+
+            mRigidbody2D.velocity = velocity;
+            isGrounded = false;
+        }
+    }
+
+    private void HandleDash(float inputDirection, bool inputJump, bool inputDash)
+    {
+        if (canDash && Mathf.Abs(currentVelocity.x) > 0.1 && inputDash)
+        {
+            Vector2 dashTarget = new(Mathf.Sign(inputDirection), !isGrounded && inputJump ? 1 : 0);
+            dashTarget = dashTarget.normalized * dashSpeed;
+
+            StartCoroutine(DashController(dashTarget));
+        }
+    }
+
+    private IEnumerator DashController(Vector2 target)
+    {
+        canDash = false;
+        isDashing = true;
+
+        float gravityScale = mRigidbody2D.gravityScale;
+        mRigidbody2D.gravityScale = 0;
+
+        for (float t = 0; t < dashDuration; t += Time.deltaTime)
+        {
+            mRigidbody2D.velocity = Vector2.Lerp(target, Vector2.zero, t / dashDuration);
+            yield return null;
+        }
+
+        mRigidbody2D.velocity = Vector2.zero;
+        mRigidbody2D.gravityScale = gravityScale;
+
+        isDashing = false;
     }
 }
