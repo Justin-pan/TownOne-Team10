@@ -20,19 +20,14 @@ public class Selection : MonoBehaviour
     private Clicker clicker;
     [SerializeField]
     private Transform transform;
-    [SerializeField]
-    private Perk nullPerk;
+   
    
 
     // Start is called before the first frame update
     void Start()
     {
         gm = GameManager.Instance;
-        perks = new List<Perk>();
-        //perks = gm.Perks
-        for (int i = 0; i < 10; i++) {
-            perks.Add(nullPerk);
-        }
+        perks = gm.Perks;
         players = gm.Players;
         this.GenerateSelection();
         this.AddToCanvas();
@@ -41,7 +36,7 @@ public class Selection : MonoBehaviour
 
     private void GenerateSelection()
     {
-         p = new HashSet<Perk>();
+        p = new HashSet<Perk>();
 
         System.Random rnd = new System.Random();
         int next = 0;

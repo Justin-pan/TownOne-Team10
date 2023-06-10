@@ -13,6 +13,16 @@ public class GameManager : MonoBehaviour
     }
 
     [SerializeField]
+    private List<Perk> perks;
+
+    public List<Perk> Perks
+    {
+        get => perks;
+    }
+
+    
+
+    [SerializeField]
     private List<Player> finishOrder;
 
     public List<Player> FinishOrder
@@ -55,6 +65,11 @@ public class GameManager : MonoBehaviour
     public void AddPlayer(Player player)
     {
         players.Add(player);
+    }
+
+    public void AddPerk(Perk perk)
+    {
+        perks.Add(perk);
     }
 
     public void FinishPlayer(Player player)
