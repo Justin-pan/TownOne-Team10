@@ -10,13 +10,26 @@ public class Selection : MonoBehaviour
     private List<Player> players;
     private List<Perk> perks;
     private HashSet<Perk> p;
-    private Transform position;
+    private float position;
+    private float shift;
+
+    [SerializeField]
+    private Clicker clicker;
+    [SerializeField]
+    private Perk nullPerk;
+   
 
     // Start is called before the first frame update
     void Start()
     {
         gm = GameManager.Instance;
+        //perks = gm.Perks
+        for (int i = 0; i < 10; i++) {
+            perks.Add(nullPerk);
+        }
         players = gm.FinishOrder;
+        this.GenerateSelection();
+        this.AddToCanvas();
     }
 
     private void GenerateSelection()
@@ -28,13 +41,15 @@ public class Selection : MonoBehaviour
 
         for (int j = 0; j < players.Count; j++)
         {
-            next = rnd.Next(p.Count); 
+            next = rnd.Next(perks.Count); 
             while (p.Contains(perks[next]))
             {
             next = rnd.Next(10);
             }
             p.Add(perks[next]);
         }
+
+        Debug.Log(p.Count);
         
     }
 
@@ -42,10 +57,16 @@ public class Selection : MonoBehaviour
 
     private void AddToCanvas()
     {
-        
+        shift = 5f;
+        position = 0f;
         foreach (Perk perk in p)
         {
-            //Instantiate(new Clicker(), position);
+            Clicker c = Instantiate(clicker);
+            c.DisplayPerk = perk;
+            //c.transform.localScale = Vector3.one;
+            //c.transform.localRotation = Quaternion.Euler(Vector3.zero);
+            c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(10, 10, 0);
+            position += shift;
         }
     }
    
