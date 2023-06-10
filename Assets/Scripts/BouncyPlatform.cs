@@ -14,9 +14,9 @@ public class BouncyPlatform : MonoBehaviour
     private float m_CurrentBounceForce;
     private float m_TimeSinceLastBounce;
 
-    private void OnCollisionEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("CharacterController2D"))
+        if (collision.gameObject.GetComponent<PlayerController>())
         {
             Rigidbody2D playerBody = collision.gameObject.GetComponent<Rigidbody2D>();
 

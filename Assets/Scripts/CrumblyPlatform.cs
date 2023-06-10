@@ -10,7 +10,7 @@ public class CrumblyPlatform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("CharacterController2D") && !PlayerLanded)
+        if (collision.gameObject.GetComponent<PlayerController>() && !PlayerLanded)
         {
             PlayerLanded = true;
             Invoke("Crumble", m_CrumbleDelay);
