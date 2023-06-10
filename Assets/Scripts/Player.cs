@@ -14,6 +14,11 @@ public class Player : MonoBehaviour
         currentHealth = maxHealth;
     }
 
+    private void Start()
+    {
+        GameManager.Instance.AddPlayer(this);
+    }
+
     public void OnHit(Hit hit)
     {
         currentHealth = Mathf.Clamp(currentHealth - hit.damage, 0, maxHealth);

@@ -18,10 +18,11 @@ public class EndPoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        CharacterController2D player = collider.gameObject.GetComponent<CharacterController2D>();
+        Player player = collider.gameObject.GetComponent<Player>();
 
         if (player != null)
         {
+            Debug.Log("A player has finished");
             GameManager.Instance.FinishPlayer(player);
         }
     }
