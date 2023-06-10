@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -23,6 +24,7 @@ public class Selection : MonoBehaviour
     void Start()
     {
         gm = GameManager.Instance;
+        perks = new List<Perk>();
         //perks = gm.Perks
         for (int i = 0; i < 10; i++) {
             perks.Add(nullPerk);
@@ -30,6 +32,7 @@ public class Selection : MonoBehaviour
         players = gm.FinishOrder;
         this.GenerateSelection();
         this.AddToCanvas();
+        UnityEngine.Debug.Log("Finsih");
     }
 
     private void GenerateSelection()
@@ -38,19 +41,20 @@ public class Selection : MonoBehaviour
 
         System.Random rnd = new System.Random();
         int next = 0;
-
+        UnityEngine.Debug.Log("Starting to adding trap" + players.Count);
         for (int j = 0; j < players.Count; j++)
         {
+            UnityEngine.Debug.Log("Starting to adding trap setp 1");
             next = rnd.Next(perks.Count); 
             while (p.Contains(perks[next]))
             {
-            next = rnd.Next(10);
+                UnityEngine.Debug.Log("Starting to adding trap whileloop");
+                next = rnd.Next(perks.Count);
             }
             p.Add(perks[next]);
+            UnityEngine.Debug.Log("adding trap");
         }
-
-        Debug.Log(p.Count);
-        
+        UnityEngine.Debug.Log("Finsih generating" + p.Count);
     }
 
 
@@ -59,6 +63,7 @@ public class Selection : MonoBehaviour
     {
         shift = 5f;
         position = 0f;
+        UnityEngine.Debug.Log("getting here");
         foreach (Perk perk in p)
         {
             Clicker c = Instantiate(clicker);
@@ -67,6 +72,7 @@ public class Selection : MonoBehaviour
             //c.transform.localRotation = Quaternion.Euler(Vector3.zero);
             c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(10, 10, 0);
             position += shift;
+            UnityEngine.Debug.Log("Creating at " + position);
         }
     }
    
