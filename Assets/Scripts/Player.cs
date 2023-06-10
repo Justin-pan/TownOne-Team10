@@ -10,9 +10,6 @@ public class Player : MonoBehaviour
 
     public int PlayerID { get; set; }
 
-    // [Components]
-    private PlayerController mPlayerController;
-
     private int currentHealth;
 
     private PlayerState m_PlayerState;
@@ -20,17 +17,12 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        mPlayerController = GetComponent<PlayerController>();
-    }
-
-    private void Start()
-    {
-        // TODO
         m_PlayerState = PlayerState.Idle;
+
         currentHealth = maxHealth;
     }
 
-    private void Update()
+    private void Start()
     {
         // TODO
         switch(m_PlayerState)
@@ -57,7 +49,7 @@ public class Player : MonoBehaviour
                 // TODO
                 break;
         }
-        mPlayerController.Move(Input.GetAxis("Horizontal"), Input.GetButtonDown("Jump"), Input.GetButtonDown("Fire1"));
+        GameManager.Instance.AddPlayer(this);
     }
 
     public void OnHit(Hit hit)
