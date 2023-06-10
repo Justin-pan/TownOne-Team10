@@ -65,7 +65,7 @@ public class PlayerController : MonoBehaviour
         
         // TODO: Better collision check method?
         Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position + (m_Collider2D.bounds.extents.y * Vector3.down),
-            Vector3.right + (m_GroundCheckHeight * Vector3.up), 0);
+            0.9f * Vector3.right + (m_GroundCheckHeight * Vector3.up), 0);
 
         float speed = m_TargetSpeed - m_Rigidbody2D.velocity.x;
         m_Rigidbody2D.AddForce(speed * (m_IsGrounded ? m_Traction : m_AirTraction) * Vector2.right, ForceMode2D.Impulse);
