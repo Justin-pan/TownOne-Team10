@@ -5,17 +5,17 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    private List<CharacterController2D> players;
+    private List<Player> players;
 
-    public List<CharacterController2D> Players
+    public List<Player> Players
     {
         get => players;
     }
 
     [SerializeField]
-    private List<CharacterController2D> finishOrder;
+    private List<Player> finishOrder;
 
-    public List<CharacterController2D> FinishOrder
+    public List<Player> FinishOrder
     {
         get => finishOrder;
     }
@@ -48,16 +48,16 @@ public class GameManager : MonoBehaviour
 
     private GameManager()
     {
-        players = new List<CharacterController2D>();
-        finishOrder = new List<CharacterController2D>();
+        players = new List<Player>();
+        finishOrder = new List<Player>();
     }
 
-    public void AddPlayer(CharacterController2D player)
+    public void AddPlayer(Player player)
     {
         players.Add(player);
     }
 
-    public void FinishPlayer(CharacterController2D player)
+    public void FinishPlayer(Player player)
     {
         finishOrder.Add(player);
     }
