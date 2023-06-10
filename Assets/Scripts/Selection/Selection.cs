@@ -13,9 +13,13 @@ public class Selection : MonoBehaviour
     private HashSet<Perk> p;
     private float position;
     private float shift;
+    private Vector3 canvasPos;
+    
 
     [SerializeField]
     private Clicker clicker;
+    [SerializeField]
+    private Transform transform;
     [SerializeField]
     private Perk nullPerk;
    
@@ -29,7 +33,7 @@ public class Selection : MonoBehaviour
         for (int i = 0; i < 10; i++) {
             perks.Add(nullPerk);
         }
-        players = gm.FinishOrder;
+        players = gm.Players;
         this.GenerateSelection();
         this.AddToCanvas();
         UnityEngine.Debug.Log("Finsih");
@@ -64,13 +68,14 @@ public class Selection : MonoBehaviour
         shift = 5f;
         position = 0f;
         UnityEngine.Debug.Log("getting here");
+        
         foreach (Perk perk in p)
         {
             Clicker c = Instantiate(clicker);
             c.DisplayPerk = perk;
             //c.transform.localScale = Vector3.one;
             //c.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(10, 10, 0);
+            c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(position, transform.position.y, 0);
             position += shift;
             UnityEngine.Debug.Log("Creating at " + position);
         }

@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     {
         // TODO
         GameManager.Instance.AddPlayer(this);
+        
+        
     }
 
     private void Update()
