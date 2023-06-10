@@ -12,7 +12,6 @@ public class DynamicCamera : MonoBehaviour
     private float maximumSize = 6f;
 
     private float bottomMargin = 2f;
-    private float sideMargin = 1f;
     private const float SCALING_SPEED = 3f;
     private const float SHIFT_SPEED = 3f;
     private Vector3 boundOffset = new Vector3(0, 0f, 0);

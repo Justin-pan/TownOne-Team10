@@ -36,10 +36,9 @@ public class SpawnPoint : MonoBehaviour
 
         for (int j = 0; j < numOfPlayers; ++j)
         {
-            for (int i = 0; i < maxAttempts; i++)
+            for (int i = 0; i < maxAttempts; ++i)
             {
                 spawnPoint = spawnAreaCenter + new Vector3(Random.Range(-spawnAreaLength / 2f, spawnAreaLength / 2f), Random.Range(-spawnAreaWidth / 2f, spawnAreaWidth / 2f), 0f);
-
                 Collider[] colliders = Physics.OverlapSphere(spawnPoint, 1f);
 
                 if (colliders.Length == 0)
