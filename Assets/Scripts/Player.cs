@@ -6,23 +6,28 @@ public class Player : MonoBehaviour
     [SerializeField] private int m_MaxHealth;
     //[SerializeField]
     //private Animation m_CurrentAnimation;
+    [SerializeField] private int maxHealth;
 
     public int PlayerID { get; set; }
 
-    private int m_Health;
+    // [Components]
+    private PlayerController mPlayerController;
+
+    private int currentHealth;
 
     private PlayerState m_PlayerState;
 
 
     private void Awake()
     {
-        m_Health = m_MaxHealth;
+        mPlayerController = GetComponent<PlayerController>();
     }
 
     private void Start()
     {
         // TODO
         m_PlayerState = PlayerState.Idle;
+        currentHealth = maxHealth;
     }
 
     private void Update()
@@ -52,12 +57,13 @@ public class Player : MonoBehaviour
                 // TODO
                 break;
         }
+        mPlayerController.Move(Input.GetAxis("Horizontal"), Input.GetButtonDown("Jump"), Input.GetButtonDown("Fire1"));
     }
 
     public void OnHit(Hit hit)
     {
         m_PlayerState = PlayerState.Hurt;
-        m_Health = Mathf.Clamp(m_Health - hit.damage, 0, m_MaxHealth);
+        currentHealth = Mathf.Clamp(currentHealth - hit.damage, 0, maxHealth);
     }
 }
 
