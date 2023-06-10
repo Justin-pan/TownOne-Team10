@@ -8,7 +8,8 @@ public class DynamicCamera : MonoBehaviour
 
     private Bounds bound;
 
-    private float minimumSize = 3f;
+    private float minimumSize = 4f;
+    private float maximumSize = 6f;
 
     private float bottomMargin = 2f;
     private float sideMargin = 1f;
@@ -16,7 +17,7 @@ public class DynamicCamera : MonoBehaviour
     private const float SHIFT_SPEED = 3f;
     private Vector3 boundOffset = new Vector3(0, 0f, 0);
 
-    private float Y_SCALE_CONST = 1.05f;
+    private float Y_SCALE_CONST = 1.1f;
 
 
     [SerializeField]
@@ -51,7 +52,7 @@ public class DynamicCamera : MonoBehaviour
 
     public void SetBound()
     {
-        Vector3 newSize = new Vector3(bound.size.x + sideMargin, bound.size.y + bottomMargin, 0);
+        Vector3 newSize = new Vector3(bound.size.x, bound.size.y + bottomMargin, 0);
 
         float xScaling = newSize.x * Screen.height / Screen.width;
         float yScaling = newSize.y * Screen.height / Screen.width * Y_SCALE_CONST;
@@ -63,9 +64,9 @@ public class DynamicCamera : MonoBehaviour
         }
         else
         {
-            boundOffset = new Vector3(0, + (xScaling / 2), 0);
+            boundOffset = new Vector3(0, + (xScaling / 3), 0);
         }
-        camera.orthographicSize =  Mathf.Lerp(camera.orthographicSize, targetBound, SCALING_SPEED * Time.deltaTime);
+        camera.orthographicSize =  Mathf.Clamp(Mathf.Lerp(camera.orthographicSize, targetBound, SCALING_SPEED * Time.deltaTime), minimumSize, maximumSize);
     }
 
     public void SetCenter()
