@@ -18,8 +18,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D m_Rigidbody2D;
     private Collider2D m_Collider2D;
 
-    private Vector2 m_TargetVelocity;
-    private Vector2 m_Velocity;
+    private float m_TargetSpeed;
 
     private bool m_IsGrounded;
     private bool m_IsFacingRight;
@@ -30,8 +29,7 @@ public class PlayerController : MonoBehaviour
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_Collider2D = GetComponent<Collider2D>();
 
-        m_TargetVelocity = Vector2.zero;
-        m_Velocity = Vector2.zero;
+        m_TargetSpeed = 0;
 
         m_IsGrounded = false;
         m_IsFacingRight = true;
@@ -39,18 +37,21 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        float move = Input.GetAxis("Horizontal");
-        bool jump = Input.GetButtonDown("Jump");
+        float inputMove = Input.GetAxis("Horizontal");
+        bool inputJump = Input.GetButtonDown("Jump");
 
-        m_TargetVelocity = new(move * m_MoveSpeed, m_Rigidbody2D.velocity.y);
+        m_TargetSpeed = inputMove * m_MoveSpeed;
 
-        if (m_IsGrounded && jump)
+        if (inputJump && m_IsGrounded)
         {
-            m_Rigidbody2D.AddForce(m_JumpSpeed * Vector2.up);
+            // m_Rigidbody2D.velocity = new(m_Rigidbody2D.velocity.y, m_JumpSpeed);
+
+            m_Rigidbody2D.AddForce(m_JumpSpeed * Vector2.up, ForceMode2D.Impulse);
             m_IsGrounded = false;
         }
 
-        if (m_IsFacingRight ? move < 0 : move > 0)
+        // Update the sprite to match the input direction.
+        if (m_IsFacingRight ? m_TargetSpeed < 0 : m_TargetSpeed > 0)
         {
             m_SpriteRenderer.flipX = !m_SpriteRenderer.flipX;
             m_IsFacingRight = !m_IsFacingRight;
@@ -59,20 +60,20 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, m_TargetVelocity, ref m_Velocity, 
-            1 - (m_IsGrounded ? m_Traction : m_AirTraction));
+        // m_Rigidbody2D.velocity = Vector2.SmoothDamp(m_Rigidbody2D.velocity, m_TargetVelocity, ref m_Velocity, 
+        //     1 - (m_IsGrounded ? m_Traction : m_AirTraction));
         
+        // TODO: Better collision check method?
         Collider2D[] colliders = Physics2D.OverlapBoxAll(transform.position + (m_Collider2D.bounds.extents.y * Vector3.down),
             Vector3.right + (m_GroundCheckHeight * Vector3.up), 0);
 
-        m_IsGrounded = false;
+        float speed = m_TargetSpeed - m_Rigidbody2D.velocity.x;
+        m_Rigidbody2D.AddForce(speed * (m_IsGrounded ? m_Traction : m_AirTraction) * Vector2.right, ForceMode2D.Impulse);
 
+        m_IsGrounded = false;
         foreach (Collider2D collider in colliders)
         {
-            if (collider.gameObject != gameObject)
-            {
-                m_IsGrounded = true;
-            }
+            m_IsGrounded |= collider.gameObject != gameObject;
         }
     }
 }
