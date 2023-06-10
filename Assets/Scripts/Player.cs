@@ -4,12 +4,15 @@ public class Player : MonoBehaviour
 {
     [Header("Parameters")]
     [SerializeField] private int m_MaxHealth;
+    //[SerializeField]
+    //private Animation m_CurrentAnimation;
 
     public int PlayerID { get; set; }
 
     private int m_Health;
 
     private PlayerState m_PlayerState;
+
 
     private void Awake()
     {
@@ -33,11 +36,20 @@ public class Player : MonoBehaviour
             case PlayerState.Moving:
                 // TODO implement Moving
                 break;
+           case PlayerState.Jumping:
+                // TODO implement Jumping
+                break;
             case PlayerState.Hurt:
                 // TODO implement Hurt
                 break;
-            case PlayerState.Jumping:
-                // TODO implement Jumping
+            case PlayerState.Dashing:
+                // TODO implement Dashing
+                break;
+            case PlayerState.Falling:
+                // TODO
+                break;
+            case PlayerState.Dead:
+                // TODO
                 break;
         }
     }
@@ -55,5 +67,8 @@ public enum PlayerState
     Idle,
     Moving,
     Jumping,
-    Hurt
+    Hurt,
+    Dashing,
+    Falling,
+    Dead
 }
