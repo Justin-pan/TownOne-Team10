@@ -2,12 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Selection : MonoBehaviour
 {
     private GameManager gm;
     private List<Player> players;
-    //private List<Perk> perks; perks dont exist yet
+    private List<Perk> perks;
+    private HashSet<Perk> p;
+    private Transform position;
 
     // Start is called before the first frame update
     void Start()
@@ -18,25 +21,32 @@ public class Selection : MonoBehaviour
 
     private void GenerateSelection()
     {
-        //private HashSet<Perk> p;
+         p = new HashSet<Perk>();
 
         System.Random rnd = new System.Random();
         int next = 0;
+
         for (int j = 0; j < players.Count; j++)
         {
-            //next = rnd.Next(10); //change the 10 to (total # of perks - 1).
-            //while (p.Contains(perks[next])) {
-            //next = rnd.Next(10);
-            //}
-
-            //p.Add(perks[next]);
+            next = rnd.Next(p.Count); 
+            while (p.Contains(perks[next]))
+            {
+            next = rnd.Next(10);
+            }
+            p.Add(perks[next]);
         }
-
-        //foreach(Perk perk: p){
-
-        //}
         
-
     }
 
+
+
+    private void AddToCanvas()
+    {
+        
+        foreach (Perk perk in p)
+        {
+            //Instantiate(new Clicker(), position);
+        }
+    }
+   
 }

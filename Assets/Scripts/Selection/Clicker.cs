@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Clicker : MonoBehaviour
 {
-    
-    //private Perk perk;
+
+    private Perk perk;
 
     private void OnMouseDown()
     {
@@ -23,5 +23,7 @@ public class Clicker : MonoBehaviour
     {
         GetComponent<SpriteRenderer>().material.SetColor("_Color", Color.white);
     }
+
+    
 
 }
