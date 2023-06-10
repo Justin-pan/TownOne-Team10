@@ -12,7 +12,7 @@ public class IcePlatform : MonoBehaviour
 
     private void OnCollisionEnter2d(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("CharacterController2D"))
+        if (collision.gameObject.GetComponent<PlayerController>())
         {
             Rigidbody2D playerBody = collision.gameObject.GetComponent<Rigidbody2D>();
             m_OldFriction = playerBody.sharedMaterial.friction;
@@ -23,7 +23,7 @@ public class IcePlatform : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("CharacterController2D"))
+        if (collision.gameObject.GetComponent<PlayerController>())
         {
             Rigidbody2D playerBody = collision.gameObject.GetComponent<Rigidbody2D>();
 
