@@ -14,13 +14,13 @@ public class Clicker : MonoBehaviour
     private void OnMouseOver()
     {
         Debug.Log("hover");
-        GetComponent<SpriteRenderer>().material.SetColor("_Color", Color.blue);
+        GetComponent<SpriteRenderer>().material.SetColor("_Color", Color.gray);
     }
 
     private void OnMouseExit()
     {
-        Debug.Log("hover");
-        GetComponent<SpriteRenderer>().material.SetColor("_Color", Color.red);
+        Debug.Log("exit");
+        GetComponent<SpriteRenderer>().material.SetColor("_Color", Color.white);
     }
 
 }
