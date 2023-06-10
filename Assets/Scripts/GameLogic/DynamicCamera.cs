@@ -10,7 +10,8 @@ public class DynamicCamera : MonoBehaviour
 
     private float minimumSize = 1f;
 
-    private float bottomMargin = 3f;
+    private float bottomMargin = 0f;
+    private float sideMargin = 3f;
     private const float SCALING_SPEED = 3f;
     private const float SHIFT_SPEED = 3f;
 
@@ -46,7 +47,7 @@ public class DynamicCamera : MonoBehaviour
 
     public void SetBound()
     {
-        Vector3 newSize = new Vector3(0, bound.size.y + bottomMargin, 0);
+        Vector3 newSize = new Vector3(sideMargin, bound.size.y + bottomMargin, 0);
 
         float targetBound = Mathf.Max(newSize.x * aspectRatio, newSize.y * aspectRatio, minimumSize);
 
@@ -56,6 +57,7 @@ public class DynamicCamera : MonoBehaviour
     public void SetCenter()
     {
         Vector3 targetPosition = bound.center + new Vector3(0, 0, transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, targetPosition, SHIFT_SPEED * Time.deltaTime);
+        transform.position = new Vector3(transform.position.x, Mathf.Lerp(transform.position.y, targetPosition.y, SHIFT_SPEED * Time.deltaTime),
+            Mathf.Lerp(transform.position.z, targetPosition.z, SHIFT_SPEED * Time.deltaTime));
     }
 }
