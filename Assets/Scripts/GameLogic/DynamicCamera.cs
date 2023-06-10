@@ -57,7 +57,7 @@ public class DynamicCamera : MonoBehaviour
         float xScaling = newSize.x * Screen.height / Screen.width;
         float yScaling = newSize.y * Screen.height / Screen.width * Y_SCALE_CONST;
         float targetBound = Mathf.Max(xScaling, yScaling, minimumSize);
-        Debug.Log(targetBound);
+        
         if (xScaling < yScaling)
         {
             boundOffset = new Vector3(0, + yScaling / 5, 0);
