@@ -7,21 +7,11 @@ public class Player : MonoBehaviour
 
     public int PlayerID { get; set; }
 
-    // [Components]
-    private PlayerController mPlayerController;
-
     private int currentHealth;
 
     private void Awake()
     {
-        mPlayerController = GetComponent<PlayerController>();
-
         currentHealth = maxHealth;
-    }
-
-    private void Update()
-    {
-        mPlayerController.Move(Input.GetAxis("Horizontal"), Input.GetButtonDown("Jump"), Input.GetButtonDown("Fire1"));
     }
 
     public void OnHit(Hit hit)
