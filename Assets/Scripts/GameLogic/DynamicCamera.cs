@@ -17,7 +17,7 @@ public class DynamicCamera : MonoBehaviour
     private Vector3 boundOffset = new Vector3(0, 1.5f, 0);
 
     [SerializeField]
-    private Camera camera;
+    private new Camera camera;
 
     // Start is called before the first frame update
     void Start()
