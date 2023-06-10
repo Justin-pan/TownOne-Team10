@@ -183,10 +183,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groundCheck: {fileID: 7223263206084463783}
-  groundCheckRadius: 0.1
+  groundCheckRadius: 0.02
+  minHorizontalDashSpeed: 0.5
   moveSpeed: 5
   jumpSpeed: 7.5
   dashSpeed: 15
   dashDuration: 0.25
+  dashKnockback: 40
   traction: 1
-  airTraction: 0.8
+  airTraction: 1
