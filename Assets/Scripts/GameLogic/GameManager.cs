@@ -6,6 +6,12 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private List<CharacterController2D> players;
+
+    public List<CharacterController2D> Players
+    {
+        get => players;
+    }
+
     [SerializeField]
     private List<CharacterController2D> finishOrder;
 
