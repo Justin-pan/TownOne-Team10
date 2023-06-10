@@ -74,6 +74,15 @@ public class GameManager : MonoBehaviour
 
     public void FinishPlayer(Player player)
     {
-        finishOrder.Add(player);
+        if (!finishOrder.Contains(player))
+        {
+            Debug.Log("Player " + player.PlayerID + " finished");
+            finishOrder.Add(player);
+        }
+
+        if (finishOrder.Count == players.Count)
+        {
+            Debug.Log("All players finished");
+        }
     }
 }
