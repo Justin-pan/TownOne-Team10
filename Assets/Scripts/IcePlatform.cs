@@ -10,8 +10,7 @@ public class IcePlatform : MonoBehaviour
 
     private float m_OldFriction = 0.0f;
 
-    /* example code
-    private void OnCollisionEnter2d(Collider2D collision)
+    private void OnCollisionEnter2d(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("CharacterController2D"))
         {
@@ -22,7 +21,7 @@ public class IcePlatform : MonoBehaviour
         }
     }
 
-    private void OnCollisionExit2D(Collider2D collision)
+    private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("CharacterController2D"))
         {
@@ -32,5 +31,4 @@ public class IcePlatform : MonoBehaviour
         }
 
     }
-    */
 }

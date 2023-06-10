@@ -14,7 +14,6 @@ public class BouncyPlatform : MonoBehaviour
     private float m_CurrentBounceForce;
     private float m_TimeSinceLastBounce;
 
-    /*
     private void OnCollisionEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("CharacterController2D"))
@@ -41,5 +40,4 @@ public class BouncyPlatform : MonoBehaviour
             m_CurrentBounceForce = m_InitialBounceForce;
         }
     }
-    */
 }

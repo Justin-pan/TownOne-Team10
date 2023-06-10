@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class CrumblyPlatform : MonoBehaviour
 {
+    [SerializeField]
+    private float m_CrumbleDelay = 2f;
     private bool PlayerLanded = false;
 
-    /* Example crumble code
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("CharacterController2D") && !PlayerLanded)
         {
             PlayerLanded = true;
-            Invoke()
+            Invoke("Crumble", m_CrumbleDelay);
         }
     }
 
@@ -20,5 +21,4 @@ public class CrumblyPlatform : MonoBehaviour
     {
         Destroy(gameObject);
     }
-    */
 }
