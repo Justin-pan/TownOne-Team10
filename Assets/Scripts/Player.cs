@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
 
     private int m_Health;
 
+    private PlayerState m_PlayerState;
+
     private void Awake()
     {
         m_Health = m_MaxHealth;
@@ -17,6 +19,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         // TODO
+        m_PlayerState = PlayerState.Idle;
     }
 
     private void Update()
@@ -28,4 +31,14 @@ public class Player : MonoBehaviour
     {
         m_Health = Mathf.Clamp(m_Health - hit.damage, 0, m_MaxHealth);
     }
+}
+
+// Enum for Player States
+public enum PlayerState
+{
+    Idle,
+    Moving,
+    Jumping,
+    Hurt,
+    Dead
 }
