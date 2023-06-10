@@ -72,7 +72,16 @@ public class GameManager : MonoBehaviour
 
     public void FinishPlayer(Player player)
     {
-        finishOrder.Add(player);
+        if (!finishOrder.Contains(player))
+        {
+            Debug.Log("Player " + player.PlayerID + " finished");
+            finishOrder.Add(player);
+        }
+
+        if (finishOrder.Count == players.Count)
+        {
+            Debug.Log("All players finished");
+        }
     }
 
     // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates
