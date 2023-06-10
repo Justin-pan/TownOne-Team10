@@ -6,7 +6,9 @@ using UnityEngine;
 public class Selection : MonoBehaviour
 {
     private GameManager gm;
-    private List<CharacterController2D> players;
+    private List<Player> players;
+    //private List<Perk> perks; perks dont exist yet
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,11 +18,25 @@ public class Selection : MonoBehaviour
 
     private void GenerateSelection()
     {
-        System.Random rnd = new System.Random();
+        //private HashSet<Perk> p;
 
+        System.Random rnd = new System.Random();
+        int next = 0;
         for (int j = 0; j < players.Count; j++)
         {
-            Console.WriteLine(rnd.Next(10));//returns random integers < 10
+            //next = rnd.Next(10); //change the 10 to (total # of perks - 1).
+            //while (p.Contains(perks[next])) {
+            //next = rnd.Next(10);
+            //}
+
+            //p.Add(perks[next]);
         }
+
+        //foreach(Perk perk: p){
+
+        //}
+        
+
     }
+
 }
