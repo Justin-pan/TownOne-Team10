@@ -4,8 +4,9 @@ public class Player : MonoBehaviour
 {
     [Header("Parameters")]
     [SerializeField] private int m_MaxHealth;
-    //[SerializeField]
-    //private Animation m_CurrentAnimation;
+    private Animator m_CurrentAnimation;
+    [SerializeField]
+    private RuntimeAnimatorController m_AnimatorController;
     [SerializeField] private int maxHealth;
 
     public int PlayerID { get; set; }
@@ -20,17 +21,34 @@ public class Player : MonoBehaviour
         m_PlayerState = PlayerState.Idle;
 
         currentHealth = maxHealth;
+        m_CurrentAnimation = GetComponent<Animator>();
+        m_CurrentAnimation.runtimeAnimatorController = m_AnimatorController;
     }
 
     private void Start()
     {
+        GameManager.Instance.AddPlayer(this);
+    }
+
+    public void Update()
+    {
         // TODO
+        if (Input.GetButtonDown("Jump"))
+        {
+            m_PlayerState = PlayerState.Moving;
+        }
+        else
+        {
+            m_PlayerState = PlayerState.Idle;
+        }
         switch(m_PlayerState)
         {
             case PlayerState.Idle:
+                m_CurrentAnimation.SetBool("Moving", false);
                 // TODO implement Idle
                 break;
             case PlayerState.Moving:
+                m_CurrentAnimation.SetBool("Moving", true);
                 // TODO implement Moving
                 break;
            case PlayerState.Jumping:
@@ -49,7 +67,6 @@ public class Player : MonoBehaviour
                 // TODO
                 break;
         }
-        GameManager.Instance.AddPlayer(this);
     }
 
     public void OnHit(Hit hit)
