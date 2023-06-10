@@ -4,22 +4,23 @@ using UnityEngine;
 
 public class Clicker : MonoBehaviour
 {
-   
+    
+    //private Perk perk;
+
     private void OnMouseDown()
     {
         Debug.Log("click");
-        // something to add perk to player??
+        //AddPerkToPlayer(perk);
     }
 
     private void OnMouseOver()
     {
-        Debug.Log("hover");
         GetComponent<SpriteRenderer>().material.SetColor("_Color", Color.gray);
     }
 
+    
     private void OnMouseExit()
     {
-        Debug.Log("exit");
         GetComponent<SpriteRenderer>().material.SetColor("_Color", Color.white);
     }
 
