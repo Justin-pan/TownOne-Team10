@@ -33,9 +33,9 @@ public class DynamicCamera : MonoBehaviour
 
     public Bounds CreateBound()
     {
-        bound = new Bounds(Vector3.zero, Vector3.zero);
+        bound = new Bounds(GameManager.Instance.Players[0].transform.position , Vector3.zero);
 
-        foreach (CharacterController2D player in GameManager.Instance.Players)
+        foreach (Player player in GameManager.Instance.Players)
         {
             bound.Encapsulate(player.transform.position);
         }
