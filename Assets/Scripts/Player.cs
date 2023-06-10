@@ -12,14 +12,14 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         m_Health = m_MaxHealth;
+        
     }
 
     private void Start()
     {
         // TODO
         GameManager.Instance.AddPlayer(this);
-        
-        
+
     }
 
     private void Update()
