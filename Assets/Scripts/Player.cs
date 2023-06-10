@@ -25,10 +25,26 @@ public class Player : MonoBehaviour
     private void Update()
     {
         // TODO
+        switch(m_PlayerState)
+        {
+            case PlayerState.Idle:
+                // TODO implement Idle
+                break;
+            case PlayerState.Moving:
+                // TODO implement Moving
+                break;
+            case PlayerState.Hurt:
+                // TODO implement Hurt
+                break;
+            case PlayerState.Jumping:
+                // TODO implement Jumping
+                break;
+        }
     }
 
     public void OnHit(Hit hit)
     {
+        m_PlayerState = PlayerState.Hurt;
         m_Health = Mathf.Clamp(m_Health - hit.damage, 0, m_MaxHealth);
     }
 }
@@ -39,6 +55,5 @@ public enum PlayerState
     Idle,
     Moving,
     Jumping,
-    Hurt,
-    Dead
+    Hurt
 }
