@@ -8,13 +8,16 @@ public class DynamicCamera : MonoBehaviour
 
     private Bounds bound;
 
-    private float minimumSize = 1f;
+    private float minimumSize = 3f;
 
-    private float bottomMargin = -2f;
-    private float sideMargin = 3f;
+    private float bottomMargin = 2f;
+    private float sideMargin = 1f;
     private const float SCALING_SPEED = 3f;
     private const float SHIFT_SPEED = 3f;
-    private Vector3 boundOffset = new Vector3(0, 1.5f, 0);
+    private Vector3 boundOffset = new Vector3(0, 0f, 0);
+
+    private float Y_SCALE_CONST = 1.05f;
+
 
     [SerializeField]
     private new Camera camera;
@@ -48,17 +51,28 @@ public class DynamicCamera : MonoBehaviour
 
     public void SetBound()
     {
-        Vector3 newSize = new Vector3(sideMargin, bound.size.y + bottomMargin, 0);
+        Vector3 newSize = new Vector3(bound.size.x + sideMargin, bound.size.y + bottomMargin, 0);
 
-        float targetBound = Mathf.Max(newSize.x * aspectRatio, newSize.y * aspectRatio, minimumSize);
-
+        float xScaling = newSize.x * Screen.height / Screen.width;
+        float yScaling = newSize.y * Screen.height / Screen.width * Y_SCALE_CONST;
+        float targetBound = Mathf.Max(xScaling, yScaling, minimumSize);
+        Debug.Log(targetBound);
+        if (xScaling < yScaling)
+        {
+            boundOffset = new Vector3(0, + yScaling / 5, 0);
+        }
+        else
+        {
+            boundOffset = new Vector3(0, + (xScaling / 2), 0);
+        }
         camera.orthographicSize =  Mathf.Lerp(camera.orthographicSize, targetBound, SCALING_SPEED * Time.deltaTime);
     }
 
     public void SetCenter()
     {
         Vector3 targetPosition = bound.center + boundOffset + new Vector3(0, 0, transform.position.z);
-        transform.position = new Vector3(transform.position.x, Mathf.Lerp(transform.position.y, targetPosition.y, SHIFT_SPEED * Time.deltaTime),
+        
+        transform.position = new Vector3(Mathf.Lerp(transform.position.x, targetPosition.x, SHIFT_SPEED * Time.deltaTime), Mathf.Lerp(transform.position.y, targetPosition.y, SHIFT_SPEED * Time.deltaTime),
             Mathf.Lerp(transform.position.z, targetPosition.z, SHIFT_SPEED * Time.deltaTime));
     }
 }
