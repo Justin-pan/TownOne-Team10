@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -9,9 +11,12 @@ public class Player : MonoBehaviour
 
     private int currentHealth;
 
+    private List<Perk> perks;
+
     private void Awake()
     {
         currentHealth = maxHealth;
+        perks = new List<Perk>();
     }
 
     private void Start()
@@ -25,4 +30,10 @@ public class Player : MonoBehaviour
     {
         currentHealth = Mathf.Clamp(currentHealth - hit.damage, 0, maxHealth);
     }
+
+    public void AddPerk(Perk p)
+    {
+        perks.Add(p);
+    }
+
 }

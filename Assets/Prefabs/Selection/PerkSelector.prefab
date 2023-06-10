@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9052059756695791145}
   - component: {fileID: 1088218801257661764}
   - component: {fileID: 4611653651811572426}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PerkSelector
   m_TagString: Untagged
   m_Icon: {fileID: 0}

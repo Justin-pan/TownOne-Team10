@@ -7,28 +7,29 @@ using UnityEngine.UIElements;
 
 public class Selection : MonoBehaviour
 {
-    private GameManager gm;
+    private GameManager gm = GameManager.Instance;
     private List<Player> players;
     private List<Perk> perks;
     private HashSet<Perk> p;
-    private float position;
+    private float position = 0f;
     private float shift;
-    private Vector3 canvasPos;
+    private float offset = 0f;
     
 
     [SerializeField]
     private Clicker clicker;
     [SerializeField]
     private Transform transform;
-   
-   
+    [SerializeField]
+    RectTransform rectTransform;
 
-    // Start is called before the first frame update
-    void Start()
+
+
+    public void StartSelection()
     {
-        gm = GameManager.Instance;
-        perks = gm.Perks;
-        players = gm.Players;
+
+        perks = new List<Perk>(GameManager.Instance.Perks);
+        players = GameManager.Instance.Players;
         this.GenerateSelection();
         this.AddToCanvas();
         UnityEngine.Debug.Log("Finsih");
@@ -40,18 +41,14 @@ public class Selection : MonoBehaviour
 
         System.Random rnd = new System.Random();
         int next = 0;
-        UnityEngine.Debug.Log("Starting to adding trap" + players.Count);
-        for (int j = 0; j < players.Count; j++)
+        UnityEngine.Debug.Log("Perk count is " + perks.Count);
+        for (int j = 0; j < players.Count; ++j)
         {
-            UnityEngine.Debug.Log("Starting to adding trap setp 1");
-            next = rnd.Next(perks.Count); 
-            while (p.Contains(perks[next]))
-            {
-                UnityEngine.Debug.Log("Starting to adding trap whileloop");
-                next = rnd.Next(perks.Count);
-            }
+            UnityEngine.Debug.Log("Starting to adding trap setp1");
+            next = rnd.Next(perks.Count);
             p.Add(perks[next]);
-            UnityEngine.Debug.Log("adding trap");
+            perks.Remove(perks[next]);
+            UnityEngine.Debug.Log("adding trap" + next);
         }
         UnityEngine.Debug.Log("Finsih generating" + p.Count);
     }
@@ -60,17 +57,19 @@ public class Selection : MonoBehaviour
 
     private void AddToCanvas()
     {
-        shift = 5f;
-        position = 0f;
+
+        shift = rectTransform.rect.width / p.Count;
+        position = -300f;
         UnityEngine.Debug.Log("getting here");
         
         foreach (Perk perk in p)
         {
             Clicker c = Instantiate(clicker);
+            c.transform.parent = this.transform;
             c.DisplayPerk = perk;
             //c.transform.localScale = Vector3.one;
             //c.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(position, transform.position.y, 0);
+            c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(position, transform.position.y + offset, 0);
             position += shift;
             UnityEngine.Debug.Log("Creating at " + position);
         }

@@ -8,6 +8,7 @@ public class Perk2 : Perk
     void Start()
     {
         title = "Perk2";
+        GameManager.Instance.AddPerk(this);
     }
 
     // Update is called once per frame

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
+    private bool roundFinished = false;
+
     [SerializeField]
     private List<Player> players;
 
@@ -20,7 +23,10 @@ public class GameManager : MonoBehaviour
         get => perks;
     }
 
-    
+    [SerializeField]
+    private Selection selection;
+
+
 
     [SerializeField]
     private List<Player> finishOrder;
@@ -80,9 +86,10 @@ public class GameManager : MonoBehaviour
             finishOrder.Add(player);
         }
 
-        if (finishOrder.Count == players.Count)
+        if (finishOrder.Count == players.Count && !roundFinished)
         {
-            Debug.Log("All players finished");
+            selection.StartSelection();
+            roundFinished = true;
         }
     }
 }

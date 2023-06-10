@@ -9,8 +9,13 @@ public class Clicker : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log("click");
-        //AddPerkToPlayer(perk);
+        Player player = GameManager.Instance.FinishOrder[0];
+        Debug.Log(player);
+        Debug.Log(displayPerk);
+        player.AddPerk(displayPerk);
+        GameManager.Instance.FinishOrder.Remove(player);
+        Destroy(gameObject);
+
     }
 
     private void OnMouseOver()

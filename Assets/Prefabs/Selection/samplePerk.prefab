@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1698703804347357340}
   - component: {fileID: 8451184091851475212}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: samplePerk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
