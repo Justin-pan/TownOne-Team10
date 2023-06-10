@@ -7,9 +7,20 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
-    private List<CharacterController2D> players;
+    private List<Player> players;
+
+    public List<Player> Players
+    {
+        get => players;
+    }
+
     [SerializeField]
-    private List<CharacterController2D> finishOrder;
+    private List<Player> finishOrder;
+
+    public List<Player> FinishOrder
+    {
+        get => finishOrder;
+    }
 
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
@@ -47,16 +58,16 @@ public class GameManager : MonoBehaviour
 
     private GameManager()
     {
-        players = new List<CharacterController2D>();
-        finishOrder = new List<CharacterController2D>();
+        players = new List<Player>();
+        finishOrder = new List<Player>();
     }
 
-    public void AddPlayer(CharacterController2D player)
+    public void AddPlayer(Player player)
     {
         players.Add(player);
     }
 
-    public void FinishPlayer(CharacterController2D player)
+    public void FinishPlayer(Player player)
     {
         finishOrder.Add(player);
     }
