@@ -10,10 +10,11 @@ public class DynamicCamera : MonoBehaviour
 
     private float minimumSize = 1f;
 
-    private float bottomMargin = 0f;
+    private float bottomMargin = -2f;
     private float sideMargin = 3f;
     private const float SCALING_SPEED = 3f;
     private const float SHIFT_SPEED = 3f;
+    private Vector3 boundOffset = new Vector3(0, 1.5f, 0);
 
     [SerializeField]
     private Camera camera;
@@ -56,7 +57,7 @@ public class DynamicCamera : MonoBehaviour
 
     public void SetCenter()
     {
-        Vector3 targetPosition = bound.center + new Vector3(0, 0, transform.position.z);
+        Vector3 targetPosition = bound.center + boundOffset + new Vector3(0, 0, transform.position.z);
         transform.position = new Vector3(transform.position.x, Mathf.Lerp(transform.position.y, targetPosition.y, SHIFT_SPEED * Time.deltaTime),
             Mathf.Lerp(transform.position.z, targetPosition.z, SHIFT_SPEED * Time.deltaTime));
     }
