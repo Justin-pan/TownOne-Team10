@@ -14,6 +14,7 @@ public class DynamicCamera : MonoBehaviour
     private const float SCALING_SPEED = 3f;
     private const float SHIFT_SPEED = 3f;
 
+    [SerializeField]
     private Camera camera;
 
     // Start is called before the first frame update
@@ -45,7 +46,7 @@ public class DynamicCamera : MonoBehaviour
 
     public void SetBound()
     {
-        Vector3 newSize = bound.size + new Vector3(bottomMargin, bottomMargin, 0);
+        Vector3 newSize = new Vector3(0, bound.size.y + bottomMargin, 0);
 
         float targetBound = Mathf.Max(newSize.x * aspectRatio, newSize.y * aspectRatio, minimumSize);
 
@@ -54,7 +55,6 @@ public class DynamicCamera : MonoBehaviour
 
     public void SetCenter()
     {
-        Debug.Log(bound.center);
         Vector3 targetPosition = bound.center + new Vector3(0, 0, transform.position.z);
         transform.position = Vector3.Lerp(transform.position, targetPosition, SHIFT_SPEED * Time.deltaTime);
     }
