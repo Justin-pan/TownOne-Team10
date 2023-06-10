@@ -3,29 +3,29 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [Header("Parameters")]
-    [SerializeField] private int m_MaxHealth;
+    [SerializeField] private int maxHealth;
 
     public int PlayerID { get; set; }
 
-    private int m_Health;
+    // [Components]
+    private PlayerController mPlayerController;
+
+    private int currentHealth;
 
     private void Awake()
     {
-        m_Health = m_MaxHealth;
-    }
+        mPlayerController = GetComponent<PlayerController>();
 
-    private void Start()
-    {
-        // TODO
+        currentHealth = maxHealth;
     }
 
     private void Update()
     {
-        // TODO
+        mPlayerController.Move(Input.GetAxis("Horizontal"), Input.GetButtonDown("Jump"), Input.GetButtonDown("Fire1"));
     }
 
     public void OnHit(Hit hit)
     {
-        m_Health = Mathf.Clamp(m_Health - hit.damage, 0, m_MaxHealth);
+        currentHealth = Mathf.Clamp(currentHealth - hit.damage, 0, maxHealth);
     }
 }
