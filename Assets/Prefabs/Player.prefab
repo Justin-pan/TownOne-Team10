@@ -189,6 +189,6 @@ MonoBehaviour:
   jumpSpeed: 7.5
   dashSpeed: 15
   dashDuration: 0.25
-  dashKnockback: 25
+  dashKnockback: 40
   traction: 1
   airTraction: 1

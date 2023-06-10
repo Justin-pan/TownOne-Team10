@@ -27,6 +27,6 @@ public class Player : MonoBehaviour
     public void OnHit(Hit hit)
     {
         currentHealth = Mathf.Clamp(currentHealth - hit.Damage, 0, maxHealth);
-        mRigidbody2D.AddForce(hit.Knockback);
+        mRigidbody2D.AddForce(hit.Knockback, ForceMode2D.Impulse);
     }
 }
