@@ -43,20 +43,16 @@ public class Clicker : MonoBehaviour
     public void DisplayImage()
     {
         string perkName = displayPerk.title;
-        Debug.Log("got to swtich case");
         switch (perkName)
         {
             case "Extra points":
                 GetComponent<SpriteRenderer>().sprite = ExtraPointsSprite;
-                Debug.Log("got 1");
                 break;
             case "Bigger Dash":
                 GetComponent<SpriteRenderer>().sprite = BiggerDashSprite;
-                Debug.Log("got 2");
                 break;
             case "Slow Fall":
                 GetComponent<SpriteRenderer>().sprite = SlowFallSprite;
-                Debug.Log("got 3");
                 break;
             
         }
