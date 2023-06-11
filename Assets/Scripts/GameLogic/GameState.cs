@@ -9,4 +9,5 @@ public enum GameState
     PERK,
     BUILDING,
     PLACING,
+    ENDING,
 }

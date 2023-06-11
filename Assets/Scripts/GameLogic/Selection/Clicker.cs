@@ -17,7 +17,6 @@ public class Clicker : MonoBehaviour
         if (GameManager.Instance.FinishOrder.Count == 0 && GameManager.Instance.GameState == GameState.PERK)
         {
             GameManager.Instance.GameState = GameState.BUILDING;
-            GameManager.Instance.StartBuilding();
         }
 
     }

@@ -20,7 +20,6 @@ public class PlaceableClicker : MonoBehaviour
     private void OnMouseDown()
     {
         Player placingPlayer = GameManager.Instance.PlayerPointOrder.Dequeue();
-        Debug.Log("Player " + placingPlayer.PlayerID + " is placing");
         PlacementHelper.Instance.PlacePlaceable(displayPlaceable);
         Destroy(gameObject);
         GameManager.Instance.GameState = GameState.PLACING;

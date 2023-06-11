@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using System.Linq;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     public static readonly int GAME_WIDTH = 20; 
     public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
-    public const float POINTS_SCREEN_DELAY = 10f;
+    public const float POINTS_SCREEN_DELAY = 5f;
     public const int WINNING_SCORE = 15;
 
     public const int KILL_PLANE_OFFSET = 2;
@@ -27,6 +28,18 @@ public class GameManager : MonoBehaviour
     private GameObject pointsBar;
     [SerializeField]
     private GameObject pointsCanvas;
+
+    [SerializeField]
+    private GameObject placeableBackground;
+
+    [SerializeField]
+    private GameObject placeablePrefab;
+    [SerializeField]
+    private GameObject placeableCanvas;
+
+    [SerializeField]
+    private TextMeshProUGUI placeableText;
+
 
     [SerializeField]
     private List<Player> players;
@@ -60,6 +73,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<Placeable> placedPlaceables;
 
+    private Queue<Placeable> trapDraft;
+
     private Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
                                                                       // Keys: positions at which a placeable exists
                                                                       // Values: the placeable at that location
@@ -89,6 +104,7 @@ public class GameManager : MonoBehaviour
             Destroy(this);
         }
         pointsCanvas.gameObject.SetActive(false);
+        placeableCanvas.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -112,8 +128,10 @@ public class GameManager : MonoBehaviour
         playerPointOrder = new Queue<Player>();
         points = new Dictionary<Player, int>();
         gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>();
+        trapDraft = new Queue<Placeable>();
 
-        
+
+
     }
 
     public void AddPlayer(Player player)
@@ -271,21 +289,67 @@ public class GameManager : MonoBehaviour
         GameState = GameState.PERK;
     }
 
-    private void StartPlacing()
+    
+    private void StartBuilding()
     {
-        throw new NotImplementedException();
+        placeableCanvas.gameObject.SetActive(true);
+
+        SetPlaceableText(players.Count - PlayerPointOrder.Count + 1);
+        while (trapDraft.Count != 0)
+        {
+            Placeable placeable = trapDraft.Dequeue();
+
+            GameObject c = Instantiate(placeablePrefab);
+            Debug.Log("Instantiating");
+            c.transform.SetParent(placeableCanvas.transform, false);
+
+            c.GetComponent<RectTransform>().anchoredPosition = CalculatePlaceableSpawnPosition(players.Count - trapDraft.Count);
+           
+            PlaceableClicker pcObj = c.GetComponent<PlaceableClicker>();
+            pcObj.DisplayPlaceable = placeable;
+        }
+    }
+
+    public void SetPlaceableText(int i)
+    {
+        placeableText.text = "Player " + (i) + " is placing";
+    }
+
+    private Vector2 CalculatePlaceableSpawnPosition(int index)
+    {
+        float canvasWidth = pointsBackground.GetComponent<RectTransform>().rect.width;
+        float canvasHeight = pointsBackground.GetComponent<RectTransform>().rect.height;
+
+        // Example: Spacing the point bars evenly vertically
+        float xPosition = (index * SHIFT - 10) * (canvasWidth / (players.Count + 1));
+
+        return new Vector2(xPosition, 0f);
+    }
+
+    private void GenerateSelection()
+    {
+        System.Random rnd = new System.Random();
+        for (int j = 0; j < players.Count; ++j)
+        {
+            int next = rnd.Next(PlacedPlaceables.Count);
+            trapDraft.Enqueue(PlacedPlaceables[next]);
+        }
     }
 
     private void StartPerk()
     {
         pointsCanvas.gameObject.SetActive(false);
+
+        //eND OF PERK
+        GenerateSelection();
+        GameState = GameState.BUILDING;
     }
 
     
 
-    public void StartBuilding()
+    public void StartPlacing()
     {
-        placeableSelection.StartSelection();
+        placeableCanvas.gameObject.SetActive(false);
     }
 
     // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates
@@ -358,6 +422,9 @@ public class GameManager : MonoBehaviour
                 case GameState.PLACING:
                     StartPlacing();
                     break;
+                case GameState.ENDING:
+                    StartEnding();
+                    break;
                 default:
                     break;
 
@@ -365,7 +432,10 @@ public class GameManager : MonoBehaviour
         } 
     }
 
-    
+    private void StartEnding()
+    {
+        throw new NotImplementedException();
+    }
 
     public List<Perk> Perks
     {
