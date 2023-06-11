@@ -197,9 +197,12 @@ MonoBehaviour:
   dashKnockback: 40
   traction: 1
   airTraction: 1
+  placeablesPerRound: 1
   inputDirectionPrefix: horizontal_p
   inputJumpPrefix: jump_p
   inputDashPrefix: dash_p
+  inputPlacePrefix: place_p
   groundCheck: {fileID: 7223263206084463783}
   groundCheckRadius: 0.02
   minHorizontalDashSpeed: 0.5
+  placeableToPlace: {fileID: -2258337167455642153, guid: 71a1464eb5c567647b00debf6b92cefd, type: 3}
