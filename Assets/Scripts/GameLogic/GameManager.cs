@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
     public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
 
     public const int WINNING_SCORE = 15;
-
+    public const int KILL_PLANE_OFFSET = 1;
 
     private GameState gameState = GameState.CLIMBING;
 
@@ -29,6 +30,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private SpawnPoint spawnPoint;
+
+    [SerializeField]
+    private KillPlane killPlane;
 
     private Dictionary<Player, int> points;
 
@@ -75,6 +79,17 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+    }
+
+    private void Start()
+    {
+        killPlane.transform.localScale = new Vector3(GAME_WIDTH * 2, GAME_HEIGHT, 1);
+
+        Vector2 position = spawnPoint.transform.position;
+        position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
+
+        killPlane.transform.position = position;
+        killPlane.enabled = true;
     }
 
     private GameManager()
@@ -128,6 +143,14 @@ public class GameManager : MonoBehaviour
 
             GameState = GameState.PERK;
             selection.StartSelection();
+
+            Vector2 position = spawnPoint.transform.position;
+            position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
+
+            killPlane.transform.position = position;
+            killPlane.enabled = false;
+
+            deadPlayers.Clear();
         }
     }
 
@@ -173,9 +196,12 @@ public class GameManager : MonoBehaviour
         foreach (Player p in players)
         {
             p.ResetPlayer();
+            p.gameObject.SetActive(true);
         }
 
         spawnPoint.RespawnPlayers();
+
+        killPlane.enabled = true;
     }
 
     // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates
