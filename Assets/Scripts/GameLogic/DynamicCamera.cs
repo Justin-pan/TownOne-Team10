@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine;
 public class DynamicCamera : MonoBehaviour
 {
     private const float aspectRatio = 16f / 9f;
+
+    
 
     private Bounds bound;
 
@@ -17,6 +20,10 @@ public class DynamicCamera : MonoBehaviour
     private Vector3 boundOffset = new Vector3(0, 0f, 0);
 
     private float Y_SCALE_CONST = 1.1f;
+
+    [Header("Placement/Building Params")]
+    private const float MAX_ZOOM = 8f;
+    private const float panSpeed = 10f;
 
 
     [SerializeField]
@@ -38,10 +45,20 @@ public class DynamicCamera : MonoBehaviour
             bound = CreateBound();
             SetBound();
             SetCenter();
-        } else
+        } else 
         {
-
+            camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, MAX_ZOOM, SCALING_SPEED * Time.deltaTime);
+            ControlCamera();
         }
+    }
+
+    private void ControlCamera()
+    {
+        float verticalInput = Input.GetAxis("CameraUp");
+
+        Vector3 translation = new Vector3(0f, verticalInput * panSpeed * Time.deltaTime, 0f);
+
+        transform.Translate(translation);
     }
 
     public Bounds CreateBound()
