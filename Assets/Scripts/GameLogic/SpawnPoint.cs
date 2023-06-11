@@ -25,6 +25,45 @@ public class SpawnPoint : MonoBehaviour
         SpawnPlayers();
     }
 
+    public void RespawnPlayers()
+    {
+        Vector3 spawnAreaCenter = spawnCenter.position;
+        Vector3 spawnAreaSize = new Vector3(spawnAreaWidth, spawnAreaLength, 0f);
+        Vector3 spawnPoint = Vector3.zero;
+
+        bool validSpawnPointFound = false;
+        int maxAttempts = 10;
+
+        for (int j = 0; j < numOfPlayers; ++j)
+        {
+            for (int i = 0; i < maxAttempts; ++i)
+            {
+                spawnPoint = spawnAreaCenter + new Vector3(Random.Range(-spawnAreaLength / 2f, spawnAreaLength / 2f), Random.Range(-spawnAreaWidth / 2f, spawnAreaWidth / 2f), 0f);
+                Collider[] colliders = Physics.OverlapSphere(spawnPoint, 1f);
+
+                if (colliders.Length == 0)
+                {
+                    validSpawnPointFound = true;
+                    break;
+                }
+            }
+
+            if (validSpawnPointFound)
+            {
+                List<Player> players = GameManager.Instance.Players;
+
+                Player p = players[j];
+                p.transform.position = spawnPoint;
+                Debug.Log("Spawning player " + p.PlayerID);
+            }
+            else
+            {
+                Debug.LogError("Unable to find a valid spawn point for player " + j);
+            }
+        }
+    }
+
+
     private void SpawnPlayers()
     {
         Vector3 spawnAreaCenter = spawnCenter.position;
