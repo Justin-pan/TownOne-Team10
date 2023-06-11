@@ -880,7 +880,7 @@ MonoBehaviour:
   selection: {fileID: 2043880526}
   placeableSelection: {fileID: 1443075223}
   finishOrder: []
-  placeablesRoot: {fileID: 0}
+  placeablesRoot: {fileID: 990269926}
   placedPlaceables:
   - {fileID: 2110336133}
   - {fileID: 832656004}
