@@ -112,25 +112,18 @@ public class Player : MonoBehaviour
         switch(m_PlayerState)
         {
             case PlayerState.Idle:
-                Debug.Log("Idle");
                 break;
             case PlayerState.Moving:
-                Debug.Log("Moving");
                 break;
             case PlayerState.Jumping:
-                Debug.Log("Jumping");
                 break;
             case PlayerState.Hurt:
-                Debug.Log("Hurt");
                 break;
             case PlayerState.Dashing:
-                Debug.Log("Dashing");
                 break;
             case PlayerState.Falling:
-                Debug.Log("Falling");
                 break;
             case PlayerState.Dead:
-                Debug.Log("Dead");
                 break;
         }
 
