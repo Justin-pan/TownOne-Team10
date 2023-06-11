@@ -80,7 +80,6 @@ public class PlayerController : MonoBehaviour
             player.OnHit(new Hit(0, mRigidbody2D.velocity * dashKnockback));
             IsDashing = false;
         }
-        IsDashing = false;
     }
 
     private void HandleMove(float inputDirection, bool inputJump)
