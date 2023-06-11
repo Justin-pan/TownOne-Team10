@@ -8,12 +8,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius;
 
+    [SerializeField] private float minHorizontalDashSpeed;
+
     [Header("Parameters")]
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpSpeed;
 
     [SerializeField] private float dashSpeed;
     [SerializeField] private float dashDuration;
+    [SerializeField] private float dashKnockback;
 
     [Range(0, 1)][SerializeField] private float traction;
     [Range(0, 1)][SerializeField] private float airTraction;
@@ -50,15 +53,26 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Check if there is anything underneath the player.
         isGrounded = false;
 
+        // The player is grounded if there is anything solid directly below.
         foreach (Collider2D c in Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius))
         {
             if (c.gameObject != gameObject)
             {
                 isGrounded = canDash = true;
             }
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Colliding with anything solid immediately ends the dash.
+        isDashing = false;
+
+        if (collision.gameObject.TryGetComponent(out Player player))
+        {
+            player.OnHit(new Hit(0, currentVelocity.normalized * dashKnockback));
         }
     }
 
@@ -69,7 +83,7 @@ public class PlayerController : MonoBehaviour
 
         mRigidbody2D.velocity = Vector2.SmoothDamp(mRigidbody2D.velocity, target, ref currentVelocity,
             isGrounded ? 1 - traction : 1 - airTraction);
-        
+
         if (isGrounded && inputJump)
         {
             Vector3 velocity = currentVelocity;
@@ -82,12 +96,17 @@ public class PlayerController : MonoBehaviour
 
     private void HandleDash(float inputDirection, bool inputJump, bool inputDash)
     {
-        if (canDash && Mathf.Abs(currentVelocity.x) > 0.1 && inputDash)
+        if (canDash && inputDash)
         {
-            Vector2 dashTarget = new(Mathf.Sign(inputDirection), !isGrounded && inputJump ? 1 : 0);
-            dashTarget = dashTarget.normalized * dashSpeed;
+            float x = inputDirection > minHorizontalDashSpeed ? 1 : inputDirection < -minHorizontalDashSpeed ? -1 : 0;
+            float y = !isGrounded && inputJump ? 1 : 0;
 
-            StartCoroutine(DashController(dashTarget));
+            Vector2 dashTarget = new Vector2(x, y) * dashSpeed;
+
+            if (dashTarget != Vector2.zero)
+            {
+                _ = StartCoroutine(DashController(dashTarget));
+            }
         }
     }
 
@@ -99,7 +118,7 @@ public class PlayerController : MonoBehaviour
         float gravityScale = mRigidbody2D.gravityScale;
         mRigidbody2D.gravityScale = 0;
 
-        for (float t = 0; t < dashDuration; t += Time.deltaTime)
+        for (float t = 0; isDashing && t < dashDuration; t += Time.deltaTime)
         {
             mRigidbody2D.velocity = Vector2.Lerp(target, Vector2.zero, t / dashDuration);
             yield return null;
