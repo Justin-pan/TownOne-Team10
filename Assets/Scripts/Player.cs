@@ -8,28 +8,6 @@ public class Player : MonoBehaviour
 
     public int PlayerID { get; set; }
 
-    private float playerHeight;
-    public float PlayerHeight
-    {
-        get => playerHeight;
-        set => playerHeight = value;
-    }
-
-    private float playerMaxHeight;
-
-    public float PlayerMaxHeight
-    {
-        get => playerMaxHeight;
-    }
-
-    [SerializeField]  private Transform heightReferencePoint;
-
-    public Transform HeightReferencePoint
-    {
-        get => heightReferencePoint;
-        set => heightReferencePoint = value;
-    }
-
     private PlayerState m_PlayerState;
 
     // [Components]
@@ -102,9 +80,6 @@ public class Player : MonoBehaviour
                 // TODO
                 break;
         }
-
-        playerHeight = gameObject.transform.position.y - HeightReferencePoint.position.y;
-        playerMaxHeight = Mathf.Max(playerHeight, playerMaxHeight);
     }
 
     public void OnHit(Hit hit)
