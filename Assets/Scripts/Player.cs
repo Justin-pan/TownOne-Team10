@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,6 +7,25 @@ public class Player : MonoBehaviour
 {
     [Header("Parameters")]
     [SerializeField] public int maxHealth;
+    [SerializeField] public float moveSpeed;
+    [SerializeField] public float jumpSpeed;
+
+    [SerializeField] public float dashSpeed;
+    [SerializeField] public float dashDuration;
+    [SerializeField] public float dashKnockback;
+
+    [Range(0, 1)][SerializeField] public float traction;
+    [Range(0, 1)][SerializeField] public float airTraction;
+
+    [Header("Technical")]
+    [SerializeField] private string inputDirectionPrefix;
+    [SerializeField] private string inputJumpPrefix;
+    [SerializeField] private string inputDashPrefix;
+
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius;
+
+    [SerializeField] private float minHorizontalDashSpeed;
 
     public int PlayerID { get; set; }
 
@@ -22,7 +43,9 @@ public class Player : MonoBehaviour
         get => playerMaxHeight;
     }
 
-    [SerializeField]  private Transform heightReferencePoint;
+    private Vector2 currentVelocity;
+
+    private Transform heightReferencePoint;
 
     public Transform HeightReferencePoint
     {
@@ -35,8 +58,6 @@ public class Player : MonoBehaviour
     // [Components]
     private Rigidbody2D mRigidbody2D;
 
-    private PlayerController m_PlayerController;
-
     private Animator m_CurrentAnimation;
 
     private int currentHealth;
@@ -45,25 +66,28 @@ public class Player : MonoBehaviour
 
     private Animator m_Animator;
 
-    private bool m_WasDashReady;
-
     private bool isDead = false;
 
     private bool stillHurt = false;
 
+    private bool isGrounded;
+    private bool isDashReady;
+    private bool isDashing;
+
+    private bool facingRight;
+
     private void Awake()
     {
         currentHealth = maxHealth;
-        mRigidbody2D = GetComponent<Rigidbody2D>();
-        m_PlayerController = GetComponent<PlayerController>();
-        m_Animator = GetComponent<Animator>();
-
-        mRigidbody2D = GetComponent<Rigidbody2D>();
-
-        currentHealth = maxHealth;
+        facingRight = false;
+        isGrounded = isDashReady = isDashing = false;
+        currentVelocity = Vector2.zero;
         perks = new List<Perk>();
-
         m_PlayerState = PlayerState.Idle;
+
+        mRigidbody2D = GetComponent<Rigidbody2D>();
+        m_Animator = GetComponent<Animator>();
+        mRigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     private void Start()
@@ -74,37 +98,57 @@ public class Player : MonoBehaviour
     public void Update()
     {
         // TODO
-        m_PlayerState = CurrentState();
+        if (!isDashing && !stillHurt && !isDead)
+        {
+            HandleMove(Input.GetAxis(inputDirectionPrefix + PlayerID),
+                Input.GetButtonDown(inputJumpPrefix + PlayerID));
+            HandleDash(Input.GetAxis(inputDirectionPrefix + PlayerID),
+                Input.GetButton(inputJumpPrefix + PlayerID), Input.GetButton(inputDashPrefix + PlayerID));
+        }
+        m_PlayerState = (mRigidbody2D.velocity.y < 0) ? PlayerState.Falling : m_PlayerState;
         m_PlayerState = (stillHurt) ? PlayerState.Hurt : m_PlayerState;
         if (currentHealth <= 0)
             m_PlayerState = PlayerState.Dead;
         switch(m_PlayerState)
         {
             case PlayerState.Idle:
-                // TODO implement Idle
+                Debug.Log("Idle");
                 break;
             case PlayerState.Moving:
-                // TODO implement Moving
+                Debug.Log("Moving");
                 break;
             case PlayerState.Jumping:
-                // TODO implement Jumping
+                Debug.Log("Jumping");
                 break;
             case PlayerState.Hurt:
-                // TODO implement Hurt
+                Debug.Log("Hurt");
                 break;
             case PlayerState.Dashing:
-                // TODO implement Dashing
+                Debug.Log("Dashing");
                 break;
             case PlayerState.Falling:
-                // TODO
+                Debug.Log("Falling");
                 break;
             case PlayerState.Dead:
-                // TODO
+                Debug.Log("Dead");
                 break;
         }
 
         playerHeight = gameObject.transform.position.y - HeightReferencePoint.position.y;
         playerMaxHeight = Mathf.Max(playerHeight, playerMaxHeight);
+    }
+
+    private void FixedUpdate()
+    {
+        isGrounded = false;
+
+        foreach (Collider2D c in Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius))
+        {
+            if (c.gameObject != gameObject)
+            {
+                isGrounded = isDashReady = true;
+            }
+        }
     }
 
     public void OnHit(Hit hit)
@@ -120,6 +164,87 @@ public class Player : MonoBehaviour
         stillHurt = false;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (isDashing && collision.gameObject.TryGetComponent(out Player newPlayer))
+        {
+            newPlayer.OnHit(new Hit(0, mRigidbody2D.velocity));
+            isDashing = false;
+        }
+    }
+
+    private void Flip()
+    {
+        facingRight = !facingRight;
+
+        Vector3 currentScale = transform.localScale;
+        currentScale.x *= -1;
+        transform.localScale = currentScale;
+    }
+
+    private void HandleMove(float inputDirection, bool inputJump)
+    {
+        if (inputDirection != 0)
+            m_PlayerState = PlayerState.Moving;
+        if (inputDirection > 0 && !facingRight)
+            Flip();
+        else if (inputDirection < 0 && facingRight)
+            Flip();
+
+        Vector3 target = mRigidbody2D.velocity;
+        target.x = inputDirection * moveSpeed;
+
+        mRigidbody2D.velocity = Vector2.SmoothDamp(mRigidbody2D.velocity, target, ref currentVelocity,
+            isGrounded ? 1 - traction : 1 - airTraction);
+
+        if (isGrounded && inputJump)
+        {
+            Vector3 velocity = currentVelocity;
+            velocity.y = jumpSpeed;
+
+            mRigidbody2D.velocity = velocity;
+            isGrounded = false;
+            m_PlayerState = PlayerState.Jumping;
+        }
+    }
+
+    private void HandleDash(float inputDirection, bool inputJump, bool inputDash)
+    {
+        if (isDashReady && inputDash)
+        {
+            float x = inputDirection > minHorizontalDashSpeed ? 1 : inputDirection < -minHorizontalDashSpeed ? -1 : 0;
+            float y = !isGrounded && inputJump ? 1 : 0;
+
+            Vector2 dashTarget = new Vector2(x, y) * dashSpeed;
+
+            if (dashTarget != Vector2.zero)
+            {
+                _ = StartCoroutine(DashController(dashTarget));
+            }
+        }
+    }
+
+    private IEnumerator DashController(Vector2 target)
+    {
+        isDashReady = false;
+        isDashing = true;
+        m_PlayerState = PlayerState.Dashing;
+
+        float gravityScale = 1;
+        mRigidbody2D.gravityScale = 0;
+
+        for (float t = 0; isDashing && t < dashDuration; t += Time.deltaTime)
+        {
+            mRigidbody2D.velocity = Vector2.Lerp(target, Vector2.zero, t / dashDuration);
+            yield return null;
+        }
+
+        mRigidbody2D.velocity = Vector2.zero;
+        mRigidbody2D.gravityScale = gravityScale;
+
+         isDashing = false;
+    }
+
     public void AddPerk(Perk p)
     {
         perks.Add(p);
@@ -131,32 +256,5 @@ public class Player : MonoBehaviour
         isDead = false;
         stillHurt = false;
         playerMaxHeight = 0;
-    }
-    public PlayerState CurrentState()
-    {
-        if (m_PlayerController.IsDashing)
-        {
-            return PlayerState.Dashing;
-        }
-        else if (!m_PlayerController.IsGrounded && mRigidbody2D.velocity.y > 0)
-        {
-            return PlayerState.Jumping;
-        }
-        else if (!m_PlayerController.IsGrounded && mRigidbody2D.velocity.y <= 0)
-        {
-            return PlayerState.Falling;
-        }
-        else if (m_PlayerController.IsGrounded && mRigidbody2D.velocity.x == 0)
-        {
-            return PlayerState.Idle;
-        }
-        else if (m_PlayerController.IsGrounded && mRigidbody2D.velocity.x != 0)
-        {
-            return PlayerState.Moving;
-        }
-        else
-        {
-            return PlayerState.Idle;
-        }
     }
 }
