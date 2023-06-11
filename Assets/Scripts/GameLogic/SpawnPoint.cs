@@ -16,7 +16,7 @@ public class SpawnPoint : MonoBehaviour
     [SerializeField]
     private float spawnAreaLength = 10f;
 
-    private int numOfPlayers = 4;
+    private int numOfPlayers = 3;
 
     
 
