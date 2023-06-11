@@ -12,24 +12,22 @@ public class IcePlatform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<PlayerController>())
+        Player player = collision.gameObject.GetComponent<Player>();
+        if (player)
         {
-            PlayerController playerBody = collision.gameObject.GetComponent<PlayerController>();
-            old_traction = playerBody.traction;
+            old_traction = player.traction;
 
-            playerBody.traction = new_traction;
+            player.traction = new_traction;
             
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<PlayerController>())
+        Player player = collision.gameObject.GetComponent<Player>();
+        if (player)
         {
-            PlayerController playerBody = collision.gameObject.GetComponent<PlayerController>();
-            playerBody.traction = old_traction;
-           
+            player.traction = old_traction;
         }
-
     }
 }
