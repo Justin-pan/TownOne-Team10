@@ -33,6 +33,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<Player> finishOrder;
 
+    private Queue<Player> winningPlayers;
+
+    private Stack<Player> deadPlayers;
+
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
     
@@ -73,6 +77,8 @@ public class GameManager : MonoBehaviour
     {
         players = new List<Player>();
         finishOrder = new List<Player>();
+        winningPlayers = new Queue<Player>();
+        deadPlayers = new Stack<Player>();
         placedPlaceables = new List<Placeable>();
         playerPointOrder = new Queue<Player>();
         points = new Dictionary<Player, int>();
@@ -90,16 +96,31 @@ public class GameManager : MonoBehaviour
         perks.Add(perk);
     }
 
+    public void KillPlayer(Player player)
+    {
+        deadPlayers.Push(player);
+    }
+
     public void FinishPlayer(Player player)
     {
         if (!finishOrder.Contains(player) && gameState == GameState.CLIMBING)
         {
             Debug.Log("Player " + player.PlayerID + " finished");
-            finishOrder.Add(player);
+            winningPlayers.Enqueue(player);
         }
 
         if (finishOrder.Count == players.Count && !roundFinished)
         {
+            while (winningPlayers.Count != 0)
+            {
+                finishOrder.Add(winningPlayers.Dequeue());
+            }
+
+            while (deadPlayers.Count != 0)
+            {
+                finishOrder.Add(deadPlayers.Pop());
+            }
+
             foreach (Player p in players)
             {
                 points[p] += (int) p.PlayerMaxHeight;
@@ -217,6 +238,16 @@ public class GameManager : MonoBehaviour
     {
         get => placedPlaceables;
         set => placedPlaceables = value;
+    }
+
+    public Stack<Player> DeadPlayers
+    {
+        get => deadPlayers;
+    }
+
+    public Queue<Player> WinningPlayers
+    {
+        get => winningPlayers;
     }
 
     // EO Getters and Setters ===========================
