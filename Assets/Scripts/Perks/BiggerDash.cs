@@ -13,8 +13,7 @@ public class BiggerDash : Perk
 
     public override void ApplyEffect(Player player)
     {
-        PlayerController control = player.GetComponent<PlayerController>();
-        control.dashDuration = control.dashDuration * 2f;
+        player.dashDuration = player.dashDuration * 2f;
         Debug.Log("BiggerDash");
     }
 }

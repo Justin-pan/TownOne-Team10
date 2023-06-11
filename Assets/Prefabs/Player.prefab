@@ -45,7 +45,6 @@ GameObject:
   - component: {fileID: 8615678897207116015}
   - component: {fileID: 268595316023360176}
   - component: {fileID: 1228521199813369910}
-  - component: {fileID: 6959089093626239469}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -138,9 +137,9 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 3e46054d96361e844ad1d7121811f068, type: 2}
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_Interpolate: 1
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!70 &8615678897207116015
 CapsuleCollider2D:
@@ -191,25 +190,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 2
-  heightReferencePoint: {fileID: 0}
---- !u!114 &6959089093626239469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8949077889530043921}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c139e8cdf7f28594b92d07725d3f9412, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputDirectionPrefix: horizontal_p
-  inputJumpPrefix: jump_p
-  inputDashPrefix: dash_p
-  groundCheck: {fileID: 7223263206084463783}
-  groundCheckRadius: 0.02
-  minHorizontalDashSpeed: 0.5
   moveSpeed: 5
   jumpSpeed: 7.5
   dashSpeed: 15
@@ -217,3 +197,9 @@ MonoBehaviour:
   dashKnockback: 40
   traction: 1
   airTraction: 1
+  inputDirectionPrefix: horizontal_p
+  inputJumpPrefix: jump_p
+  inputDashPrefix: dash_p
+  groundCheck: {fileID: 7223263206084463783}
+  groundCheckRadius: 0.02
+  minHorizontalDashSpeed: 0.5
