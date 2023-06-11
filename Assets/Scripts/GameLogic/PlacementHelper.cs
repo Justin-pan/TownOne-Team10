@@ -106,6 +106,16 @@ public class PlacementHelper : MonoBehaviour
             Destroy(currentPlacementVisualObject);
             currentPlacementVisualObject = null;
             currentPlacing = null;
+
+            if (GameManager.Instance.PlayerPointOrder.Count == 0)
+            {
+                GameManager.Instance.GameState = GameState.CLIMBING;
+                UnityEngine.Debug.Log("Moving to climbing");
+                GameManager.Instance.StartClimbing();
+            } else
+            {
+                GameManager.Instance.GameState = GameState.BUILDING;
+            }
         }
         else
         {
