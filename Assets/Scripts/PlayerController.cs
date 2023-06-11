@@ -11,15 +11,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float minHorizontalDashSpeed;
 
     [Header("Parameters")]
-    [SerializeField] private float moveSpeed;
-    [SerializeField] private float jumpSpeed;
+    [SerializeField] public float moveSpeed;
+    [SerializeField] public float jumpSpeed;
 
-    [SerializeField] private float dashSpeed;
-    [SerializeField] private float dashDuration;
-    [SerializeField] private float dashKnockback;
+    [SerializeField] public float dashSpeed;
+    [SerializeField] public float dashDuration;
+    [SerializeField] public float dashKnockback;
 
-    [Range(0, 1)][SerializeField] private float traction;
-    [Range(0, 1)][SerializeField] private float airTraction;
+    [Range(0, 1)][SerializeField] public float traction;
+    [Range(0, 1)][SerializeField] public float airTraction;
 
     public bool IsGrounded { get; set; }
     public bool IsDashReady { get; set; }

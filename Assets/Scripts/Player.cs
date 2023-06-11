@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
     [SerializeField] private RuntimeAnimatorController m_AnimatorController;
 
     [Header("Parameters")]
-    [SerializeField] private int maxHealth;
+    [SerializeField] public int maxHealth;
 
     public int PlayerID { get; set; }
 
@@ -23,9 +23,6 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         mRigidbody2D = GetComponent<Rigidbody2D>();
-        m_CurrentAnimation = GetComponent<Animator>();
-
-        m_CurrentAnimation.runtimeAnimatorController = m_AnimatorController;
 
         currentHealth = maxHealth;
         perks = new List<Perk>();
@@ -44,11 +41,9 @@ public class Player : MonoBehaviour
         switch (m_PlayerState)
         {
             case PlayerState.Idle:
-                m_CurrentAnimation.SetBool("Moving", false);
                 // TODO implement Idle
                 break;
             case PlayerState.Moving:
-                m_CurrentAnimation.SetBool("Moving", true);
                 // TODO implement Moving
                 break;
             case PlayerState.Jumping:
