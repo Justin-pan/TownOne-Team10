@@ -119,11 +119,15 @@ public class GameManager : MonoBehaviour
     {
         if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
         {
+         
             deadPlayers.Push(player);
-            player.gameObject.SetActive(false);
+            
+            Debug.Log("Player " + player.PlayerID + " killed (KILL PLAYER)");
         }
 
-        
+   
+
+
 
     }
 
@@ -136,6 +140,7 @@ public class GameManager : MonoBehaviour
             if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
             {
                 winningPlayers.Enqueue(player);
+                player.gameObject.SetActive(false);
             }
         }
 
