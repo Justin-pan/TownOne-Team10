@@ -10,10 +10,17 @@ public class Clicker : MonoBehaviour
     private void OnMouseDown()
     {
         Player player = GameManager.Instance.FinishOrder[0];
-        Debug.Log("Player " + player.PlayerID + " is picking a perk");
+
         player.AddPerk(displayPerk);
         GameManager.Instance.FinishOrder.Remove(player);
+
         Destroy(gameObject);
+
+        if (GameManager.Instance.FinishOrder.Count > 0)
+        {
+            GameManager.Instance.SetPerkText(GameManager.Instance.FinishOrder[0].PlayerID + 1);
+        }
+
         if (GameManager.Instance.FinishOrder.Count == 0 && GameManager.Instance.GameState == GameState.PERK)
         {
             GameManager.Instance.GameState = GameState.BUILDING;

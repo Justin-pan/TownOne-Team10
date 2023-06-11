@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Linq;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -29,6 +30,11 @@ public class GameManager : MonoBehaviour
     private GameObject pointsBar;
     [SerializeField]
     private GameObject pointsCanvas;
+
+    [SerializeField]
+    private GameObject perksCanvas;
+    [SerializeField]
+    private GameObject perksPrefab;
 
     [SerializeField]
     private GameObject placeableBackground;
@@ -75,6 +81,7 @@ public class GameManager : MonoBehaviour
     private List<Placeable> placedPlaceables;
 
     private Queue<Placeable> trapDraft;
+    private Queue<Perk> perkDraft;
 
     private Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
                                                                       // Keys: positions at which a placeable exists
@@ -106,6 +113,7 @@ public class GameManager : MonoBehaviour
         }
         pointsCanvas.gameObject.SetActive(false);
         placeableCanvas.gameObject.SetActive(false);
+        perksCanvas.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -130,7 +138,7 @@ public class GameManager : MonoBehaviour
         points = new Dictionary<Player, int>();
         gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>();
         trapDraft = new Queue<Placeable>();
-
+        perkDraft = new Queue<Perk>();
 
 
     }
@@ -291,12 +299,15 @@ public class GameManager : MonoBehaviour
     public IEnumerator WaitForTime()
     {
         yield return new WaitForSeconds(POINTS_SCREEN_DELAY);
+
+        GeneratePerkSelection();
         GameState = GameState.PERK;
     }
 
     
     private void StartBuilding()
     {
+        perksCanvas.gameObject.SetActive(false);
         placeableCanvas.gameObject.SetActive(true);
 
         SetPlaceableText(players.Count - PlayerPointOrder.Count + 1);
@@ -320,6 +331,11 @@ public class GameManager : MonoBehaviour
         placeableText.text = "Player " + (i) + " is placing";
     }
 
+    public void SetPerkText(int i)
+    {
+        placeableText.text = "Player " + (i) + " is selecting";
+    }
+
     private Vector2 CalculatePlaceableSpawnPosition(int index)
     {
         float canvasWidth = pointsBackground.GetComponent<RectTransform>().rect.width;
@@ -341,13 +357,41 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void GeneratePerkSelection()
+    {
+        System.Random rnd = new System.Random();
+
+        for (int j = 0; j < players.Count; ++j)
+        {
+            int next = rnd.Next(Perks.Count);
+            perkDraft.Enqueue(Perks[next]);
+        }
+    }
+
     private void StartPerk()
     {
         pointsCanvas.gameObject.SetActive(false);
+        perksCanvas.gameObject.SetActive(true);
+
+        SetPerkText(players.Count - PlayerPointOrder.Count + 1);
+        while (perkDraft.Count != 0)
+        {
+            Perk perk = perkDraft.Dequeue();
+
+            GameObject c = Instantiate(perksPrefab);
+            Debug.Log("Instantiating");
+            c.transform.SetParent(perksCanvas.transform, false);
+
+            c.GetComponent<RectTransform>().anchoredPosition = CalculatePlaceableSpawnPosition(players.Count - perkDraft.Count);
+
+            Clicker pcObj = c.GetComponent<Clicker>();
+            pcObj.DisplayPerk = perk;
+
+            pcObj.DisplayImage();
+        }
 
         //eND OF PERK
         GenerateSelection();
-        GameState = GameState.BUILDING;
     }
 
     
