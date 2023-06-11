@@ -252,7 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: 
-  sprite: {fileID: 21300000, guid: 9aa77b3935128cc4b8881bc8fe48de2b, type: 3}
+  sprite: {fileID: 21300000, guid: 17dd981d501584129ab60505fea0b46b, type: 3}
 --- !u!1001 &95037816
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2954,7 +2954,7 @@ MonoBehaviour:
   m_text: Points!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
-  m_sharedMaterial: {fileID: -2659607073206303680, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
+  m_sharedMaterial: {fileID: -1197530742038903601, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3253,7 +3253,7 @@ MonoBehaviour:
   m_text: Placing Traps
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
-  m_sharedMaterial: {fileID: -2659607073206303680, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
+  m_sharedMaterial: {fileID: -1197530742038903601, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3526,7 +3526,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: 
-  sprite: {fileID: 21300000, guid: 9aa77b3935128cc4b8881bc8fe48de2b, type: 3}
+  sprite: {fileID: 21300000, guid: 17dd981d501584129ab60505fea0b46b, type: 3}
 --- !u!1 &1682445037
 GameObject:
   m_ObjectHideFlags: 0
@@ -3572,7 +3572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: 
-  sprite: {fileID: 21300000, guid: 9aa77b3935128cc4b8881bc8fe48de2b, type: 3}
+  sprite: {fileID: 21300000, guid: 17dd981d501584129ab60505fea0b46b, type: 3}
 --- !u!1001 &1728701472
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4094,7 +4094,7 @@ MonoBehaviour:
   m_text: Selecting Perks
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
-  m_sharedMaterial: {fileID: -2659607073206303680, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
+  m_sharedMaterial: {fileID: -1197530742038903601, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
