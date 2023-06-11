@@ -47,15 +47,15 @@ public class Clicker : MonoBehaviour
         Debug.Log("got to swtich case");
         switch (perkName)
         {
-            case "ExtraPoints":
+            case "Extra points":
                 GetComponent<SpriteRenderer>().sprite = ExtraPointsSprite;
                 Debug.Log("got 1");
                 break;
-            case "BiggerDash":
+            case "Bigger Dash":
                 GetComponent<SpriteRenderer>().sprite = BiggerDashSprite;
                 Debug.Log("got 2");
                 break;
-            case "SlowFall":
+            case "Slow Fall":
                 GetComponent<SpriteRenderer>().sprite = SlowFallSprite;
                 Debug.Log("got 3");
                 break;
