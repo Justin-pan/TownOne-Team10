@@ -58,6 +58,7 @@ public class Selection : MonoBehaviour
             Clicker c = Instantiate(clicker);
             c.transform.SetParent(this.transform);
             c.DisplayPerk = perk;
+            c.DisplayImage();
             //c.transform.localScale = Vector3.one;
             //c.transform.localRotation = Quaternion.Euler(Vector3.zero);
             c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(position, transform.position.y + offset, 0);

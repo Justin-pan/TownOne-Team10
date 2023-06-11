@@ -7,6 +7,13 @@ public class Clicker : MonoBehaviour
 
     private Perk displayPerk;
 
+    [SerializeField]
+    private Sprite SlowFallSprite;
+    [SerializeField]
+    private Sprite ExtraPointsSprite;
+    [SerializeField]
+    private Sprite BiggerDashSprite;
+
     private void OnMouseDown()
     {
         Player player = GameManager.Instance.FinishOrder[0];
@@ -28,10 +35,32 @@ public class Clicker : MonoBehaviour
         GetComponent<SpriteRenderer>().material.SetColor("_Color", Color.gray);
     }
 
-    
+
     private void OnMouseExit()
     {
         GetComponent<SpriteRenderer>().material.SetColor("_Color", Color.white);
+    }
+
+    public void DisplayImage()
+    {
+        string perkName = displayPerk.title;
+        Debug.Log("got to swtich case");
+        switch (perkName)
+        {
+            case "ExtraPoints":
+                GetComponent<SpriteRenderer>().sprite = ExtraPointsSprite;
+                Debug.Log("got 1");
+                break;
+            case "BiggerDash":
+                GetComponent<SpriteRenderer>().sprite = BiggerDashSprite;
+                Debug.Log("got 2");
+                break;
+            case "SlowFall":
+                GetComponent<SpriteRenderer>().sprite = SlowFallSprite;
+                Debug.Log("got 3");
+                break;
+            
+        }
     }
 
     public Perk DisplayPerk
