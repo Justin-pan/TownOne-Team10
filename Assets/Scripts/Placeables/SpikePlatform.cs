@@ -10,9 +10,24 @@ public class SpikePlatform : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        
+        if (collision.gameObject.GetComponent<Player>())
+        {
+            Player player = collision.gameObject.GetComponent<Player>();
+            player.OnHit(new Hit(1, Vector2.zero));
+            Debug.Log("dmg taken on enter");
+        }
     }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.GetComponent<Player>())
+        {
+            Player player = collision.gameObject.GetComponent<Player>();
+            player.OnHit(new Hit(1, Vector2.zero));
+            Debug.Log("dmg taken on saty");
+        }
+    }
+
 }
