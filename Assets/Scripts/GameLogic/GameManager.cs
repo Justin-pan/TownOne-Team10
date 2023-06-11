@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
     {
         Vector3 originPosition = SnapToGamePosition(rawOriginPosition);
 
-        if (!placeable.IsPlacementValid(originPosition, placedPlaceables, gamePositionPlaceableDic))
+        if (!placeable.IsPlacementValid(originPosition, gamePositionPlaceableDic))
         {
             return false;
         }
@@ -219,11 +219,6 @@ public class GameManager : MonoBehaviour
     }
 
     // Getters and Setters ==============================
-
-    public List<Placeable> GetPlacedPlaceables()
-    {
-        return placedPlaceables;
-    }
 
     public Dictionary<Vector3, Placeable> GetGamePositionPlaceableDic()
     {

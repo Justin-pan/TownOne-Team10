@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -44,12 +43,12 @@ public abstract class Placeable : MonoBehaviour
 
     // returns true if the placeable can be placed at the originPosition (the bottom-left square of the placeable),
     // given what placeables have already been placed and which position holds which placeable
-    public abstract bool IsPlacementValid(Vector3 originPosition, List<Placeable> placedPlaceables,
+    public abstract bool IsPlacementValid(Vector3 originPosition,
         Dictionary<Vector3, Placeable> gamePositionPlaceableDic);
 
     // given what placeables have already been placed and which position holds which placeable, returns true if this
     // placeable won't intersect with any other placeables if placed at the given originPosition (in game coordinates).
-    protected bool IsNotIntersectingOthers(Vector3 originPosition, List<Placeable> placedPlaceables,
+    protected bool IsNotIntersectingOthers(Vector3 originPosition,
         Dictionary<Vector3, Placeable> gamePositionPlaceableDic)
     {
         foreach (Vector3 pos in gamePositionPlaceableDic.Keys)
