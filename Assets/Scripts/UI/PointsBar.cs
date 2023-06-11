@@ -32,7 +32,7 @@ public class PointsBar : MonoBehaviour
         if (updatePoints)
         {
 
-            Debug.Log(newValues);
+            
             timing += Time.deltaTime;
             slider.value = Mathf.Lerp(oldValues, newValues, timing / POINTS_SPEED);
 

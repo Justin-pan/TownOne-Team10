@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float minHorizontalDashSpeed;
 
     public int PlayerID { get; set; }
+    public bool CanWin;
 
     private float playerHeight;
     public float PlayerHeight
@@ -78,6 +79,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
+        CanWin = true;
         currentHealth = maxHealth;
         facingRight = false;
         isGrounded = isDashReady = isDashing = false;
@@ -93,6 +95,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.AddPlayer(this);
+       
     }
 
     public void Update()
