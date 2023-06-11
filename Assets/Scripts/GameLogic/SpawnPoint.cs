@@ -54,8 +54,10 @@ public class SpawnPoint : MonoBehaviour
 
                 player.transform.parent = this.transform;
                 player.name = "Player " + (j + 1);
+                
                 Player playerObj = player.GetComponent<Player>();
                 playerObj.PlayerID = j;
+                playerObj.HeightReferencePoint = spawnCenter;
             }
             else
             {
