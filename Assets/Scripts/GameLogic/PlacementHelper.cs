@@ -46,8 +46,7 @@ public class PlacementHelper : MonoBehaviour
     {
         if (isPlacing)
         {
-            currentPlacing.SetOriginPosition(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)));
-            if (currentPlacing.IsPlacementValid(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)), 
+            if (currentPlacing.IsPlacementValid(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)),
                 GameManager.Instance.GetGamePositionPlaceableDic()))  // this is true if the placement at the mouse position
                                                                       // (after snapping) is valid
             {
@@ -63,6 +62,7 @@ public class PlacementHelper : MonoBehaviour
 
     private void UpdateCurrentVisualObject()
     {
+        currentPlacing.SetOriginPosition(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)));
         currentPlacementVisualObject.transform.position = GameManager.SnapToWorldPosition(mainCamera.ScreenToWorldPoint(Input.mousePosition));
         currentPlacementVisualObject.GetComponent<SpriteRenderer>().sprite = currentPlacing.gameObject.GetComponent<SpriteRenderer>().sprite;
         if (currentPlacing.IsPlacementValid(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)),
