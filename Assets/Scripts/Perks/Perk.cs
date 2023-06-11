@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class Perk : MonoBehaviour
 {
-    protected string title;
+
+    public string title;
+    public Sprite sprite;
+
     protected string description;
     // Start is called before the first frame update
     protected virtual void Start()
@@ -12,9 +15,11 @@ public class Perk : MonoBehaviour
         GameManager.Instance.AddPerk(this);
     }
 
-    // Update is called once per frame
-    void Update()
+    public virtual void ApplyEffect(Player player)
     {
-        
+
     }
+
+    
+
 }

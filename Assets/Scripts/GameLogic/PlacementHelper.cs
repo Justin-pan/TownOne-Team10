@@ -46,9 +46,9 @@ public class PlacementHelper : MonoBehaviour
     {
         if (isPlacing)
         {
-            if (currentPlacing.IsPlacementValid(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)),
-            GameManager.Instance.GetPlacedPlaceables(), GameManager.Instance.GetGamePositionPlaceableDic()))  // this is true if the placement at the mouse position
-                                                                                                              // (after snapping) is valid
+            if (currentPlacing.IsPlacementValid(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)), 
+                GameManager.Instance.GetGamePositionPlaceableDic()))  // this is true if the placement at the mouse position
+                                                                      // (after snapping) is valid
             {
                 HandlePlacementSuccess();
             }
@@ -65,8 +65,8 @@ public class PlacementHelper : MonoBehaviour
         currentPlacementVisualObject.transform.position = GameManager.SnapToWorldPosition(mainCamera.ScreenToWorldPoint(Input.mousePosition));
         currentPlacementVisualObject.GetComponent<SpriteRenderer>().sprite = currentPlacing.gameObject.GetComponent<SpriteRenderer>().sprite;
         if (currentPlacing.IsPlacementValid(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)),
-            GameManager.Instance.GetPlacedPlaceables(), GameManager.Instance.GetGamePositionPlaceableDic()))  // this is true if the placement at the mouse position
-                                                                                                              // (after snapping) is valid
+            GameManager.Instance.GetGamePositionPlaceableDic()))  // this is true if the placement at the mouse position
+                                                                  // (after snapping) is valid
         {
             currentPlacementVisualObject.GetComponent<SpriteRenderer>().color = new Color(0.5f, 1f, 0.5f, 1f);
         }
@@ -103,8 +103,19 @@ public class PlacementHelper : MonoBehaviour
         if (GameManager.Instance.TryPlace(currentPlacing, mainCamera.ScreenToWorldPoint(Input.mousePosition)))
         {
             isPlacing = false;
+            Destroy(currentPlacementVisualObject);
             currentPlacementVisualObject = null;
             currentPlacing = null;
+
+            if (GameManager.Instance.PlayerPointOrder.Count == 0)
+            {
+                GameManager.Instance.GameState = GameState.CLIMBING;
+                UnityEngine.Debug.Log("Moving to climbing");
+                GameManager.Instance.StartClimbing();
+            } else
+            {
+                GameManager.Instance.GameState = GameState.BUILDING;
+            }
         }
         else
         {

@@ -10,7 +10,6 @@ public class PlaceableSelection : MonoBehaviour
     private HashSet<Placeable> p;
     private float position = 0f;
     private float shift;
-    private float offset = 0f;
 
 
     [SerializeField]
@@ -45,7 +44,7 @@ public class PlaceableSelection : MonoBehaviour
     {
 
         shift = rectTransform.rect.width / p.Count;
-        position = -300f;
+        position = transform.position.x - (p.Count - 1) * shift / 2;
 
         foreach (Placeable placeable in p)
         {

@@ -3,37 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
-    public static readonly int GAME_WIDTH = 8; 
-    public static readonly int GAME_HEIGHT = 20; // the width and height of the region in which placeables can be placed, in game units
+    public static readonly int GAME_WIDTH = 20; 
+    public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
 
-    private bool roundFinished = false;
+    public const int WINNING_SCORE = 15;
+
 
     private GameState gameState = GameState.CLIMBING;
-
-    public GameState GameState
-    {
-        get => gameState;
-        set => gameState = value;
-    }
 
     [SerializeField]
     private List<Player> players;
 
-    public List<Player> Players
-    {
-        get => players;
-    }
-
     [SerializeField]
     private List<Perk> perks;
-
-    public List<Perk> Perks
-    {
-        get => perks;
-    }
 
     [SerializeField]
     private Selection selection;
@@ -41,27 +27,26 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private PlaceableSelection placeableSelection;
 
+    [SerializeField]
+    private SpawnPoint spawnPoint;
 
+    private Dictionary<Player, int> points;
+
+    private Queue<Player> playerPointOrder; //INVARIANT: Only Contains elements during Trap Drafting Phase
 
     [SerializeField]
-    private List<Player> finishOrder;
+    private List<Player> finishOrder; //INVARIANT: Only Contains elements during Perk Phase
 
-    public List<Player> FinishOrder
-    {
-        get => finishOrder;
-    }
+    private Queue<Player> winningPlayers; //INVARIANT: Only Contains elements during Climbing Phase
+
+    private Stack<Player> deadPlayers; //INVARIANT: Only Contains elements during Climbing Phase
 
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
-
+    
     [SerializeField]
     private List<Placeable> placedPlaceables;
 
-    public List<Placeable> PlacedPlaceables
-    {
-        get => placedPlaceables;
-        set => placedPlaceables = value;
-    }
     private Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
                                                                       // Keys: positions at which a placeable exists
                                                                       // Values: the placeable at that location
@@ -96,13 +81,18 @@ public class GameManager : MonoBehaviour
     {
         players = new List<Player>();
         finishOrder = new List<Player>();
+        winningPlayers = new Queue<Player>();
+        deadPlayers = new Stack<Player>();
         placedPlaceables = new List<Placeable>();
+        playerPointOrder = new Queue<Player>();
+        points = new Dictionary<Player, int>();
         gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>();
     }
 
     public void AddPlayer(Player player)
     {
         players.Add(player);
+        Points.Add(player, 0);
     }
 
     public void AddPerk(Perk perk)
@@ -110,19 +100,66 @@ public class GameManager : MonoBehaviour
         perks.Add(perk);
     }
 
+    public void KillPlayer(Player player)
+    {
+        if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
+        {
+            deadPlayers.Push(player);
+        }
+    }
+
     public void FinishPlayer(Player player)
     {
-        if (!finishOrder.Contains(player))
+        if (gameState == GameState.CLIMBING)
         {
             Debug.Log("Player " + player.PlayerID + " finished");
-            finishOrder.Add(player);
+
+            if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
+            {
+                winningPlayers.Enqueue(player);
+            }
         }
 
-        if (finishOrder.Count == players.Count && !roundFinished)
+        if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
-            gameState = GameState.PERK;
+            GameState = GameState.POINTS;
+            AssignPoints();
+            CalculatePlayerOrder();
+
+            GameState = GameState.PERK;
             selection.StartSelection();
-            roundFinished = true;
+        }
+    }
+
+    private void CalculatePlayerOrder()
+    {
+        List<KeyValuePair<Player, int>> sortedList = points.OrderByDescending(x => x.Value).ToList();
+
+
+        foreach (KeyValuePair<Player, int> pair in sortedList)
+        {
+            playerPointOrder.Enqueue(pair.Key);
+        }
+    }
+
+    private void AssignPoints()
+    {
+        while (winningPlayers.Count != 0)
+        {
+            Player p = winningPlayers.Dequeue();
+            finishOrder.Add(p);
+            points[p] += WINNING_SCORE;
+        }
+
+        while (deadPlayers.Count != 0)
+        {
+            finishOrder.Add(deadPlayers.Pop());
+        }
+
+        foreach (Player p in players)
+        {
+            points[p] += (int)p.PlayerMaxHeight; //Tentative Scoring System
+
         }
     }
 
@@ -131,13 +168,23 @@ public class GameManager : MonoBehaviour
         placeableSelection.StartSelection();
     }
 
+    public void StartClimbing()
+    {
+        foreach (Player p in players)
+        {
+            p.ResetPlayer();
+        }
+
+        spawnPoint.RespawnPlayers();
+    }
+
     // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates
     // (rawOriginPosition after snapping). Returns the success of this action.
     public bool TryPlace(Placeable placeable, Vector3 rawOriginPosition)
     {
         Vector3 originPosition = SnapToGamePosition(rawOriginPosition);
 
-        if (!placeable.IsPlacementValid(originPosition, placedPlaceables, gamePositionPlaceableDic))
+        if (!placeable.IsPlacementValid(originPosition, gamePositionPlaceableDic))
         {
             return false;
         }
@@ -148,8 +195,7 @@ public class GameManager : MonoBehaviour
         newPlacedPlaceable.SetOriginPosition(originPosition);
         newPlacedGameObject.transform.parent = placeablesRoot.transform;
         newPlacedGameObject.transform.position = newPlacedPlaceable.GetCenterInWorldCoordinates();
-        placedPlaceables.Add(newPlacedPlaceable);
-        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTakenGameCoordinates())
+        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTakenGameCoordinates(originPosition))
         {
             gamePositionPlaceableDic.Add(pos, newPlacedPlaceable);
         }
@@ -172,14 +218,61 @@ public class GameManager : MonoBehaviour
 
     // Getters and Setters ==============================
 
-    public List<Placeable> GetPlacedPlaceables()
-    {
-        return placedPlaceables;
-    }
-
     public Dictionary<Vector3, Placeable> GetGamePositionPlaceableDic()
     {
         return gamePositionPlaceableDic;
+    }
+
+
+    public GameState GameState
+    {
+        get => gameState;
+        set 
+        {
+            Debug.Log("Switching to " + value + " from " + gameState);
+            gameState = value;
+        } 
+    }
+
+    public List<Perk> Perks
+    {
+        get => perks;
+    }
+
+    public List<Player> Players
+    {
+        get => players;
+    }
+
+    public Dictionary<Player, int> Points
+    {
+        get => points;
+    }
+
+    public Queue<Player> PlayerPointOrder
+    {
+        get => playerPointOrder;
+    }
+
+    public List<Player> FinishOrder
+    {
+        get => finishOrder;
+    }
+
+    public List<Placeable> PlacedPlaceables
+    {
+        get => placedPlaceables;
+        set => placedPlaceables = value;
+    }
+
+    public Stack<Player> DeadPlayers
+    {
+        get => deadPlayers;
+    }
+
+    public Queue<Player> WinningPlayers
+    {
+        get => winningPlayers;
     }
 
     // EO Getters and Setters ===========================
