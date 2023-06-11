@@ -13,6 +13,7 @@ public class CrumblyPlatform : MonoBehaviour
         Player player = collision.gameObject.GetComponent<Player>();
         if (player && !PlayerLanded)
         {
+            
             PlayerLanded = true;
             Invoke("Crumble", m_CrumbleDelay);
         }
@@ -20,6 +21,7 @@ public class CrumblyPlatform : MonoBehaviour
 
     private void Crumble()
     {
+        
         Destroy(gameObject);
     }
 }
