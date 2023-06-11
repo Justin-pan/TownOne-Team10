@@ -10,6 +10,8 @@ public abstract class Placeable : MonoBehaviour
 
     private Vector3 originPosition; // the bottom-left corner of this placeable, in game coordinates
 
+    private List<Vector3> SpaceTaken = new List<Vector3>();
+
     // Sets the width and height
     protected abstract void DefineDimensions();
 
@@ -20,19 +22,17 @@ public abstract class Placeable : MonoBehaviour
     }
 
     // produces a list containing all the positions (squares) that this placeable takes up, in game coordinates
-    public virtual List<Vector3> GetSpaceTakenGameCoordinates(Vector3 originPosition)
+    public virtual void GetSpaceTakenGameCoordinates(Vector3 originPosition)
     {
-        List<Vector3> returnVal = new List<Vector3>();
-
+        SpaceTaken.Clear();
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                returnVal.Add(new Vector3(originPosition.x + x, originPosition.y + y, 0));
+                SpaceTaken.Add(new Vector3(originPosition.x + x, originPosition.y + y, originPosition.z));
             }
         }
 
-        return returnVal;
     }
 
     // returns the center of this placeable, in world position. Useful for placing the prefab in the world
@@ -51,15 +51,21 @@ public abstract class Placeable : MonoBehaviour
     protected bool IsNotIntersectingOthers(Vector3 originPosition,
         Dictionary<Vector3, Placeable> gamePositionPlaceableDic)
     {
+        GetSpaceTakenGameCoordinates(originPosition);
         foreach (Vector3 pos in gamePositionPlaceableDic.Keys)
         {
-            if (GetSpaceTakenGameCoordinates(originPosition).Contains(pos))
+            if (this.SpaceTaken.Contains(pos))
             {
                 return false;
             }
         }
 
         return true;
+    }
+
+    public List<Vector3> GetSpaceTaken()
+    {
+        return SpaceTaken;
     }
 
     // returns true if this placeable won't be out of bounds if placed at the given originPosition (in game coordinates).
