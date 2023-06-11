@@ -873,15 +873,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23692e3c6a2abd47a014d06d222d572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  killPlane: {fileID: 849292359}
   pointsBackground: {fileID: 1170925899}
-  pointsBar: {fileID: 0}
+  pointsBar: {fileID: 7905291808935288284, guid: b924b52e4a82b1541a159f2ff35c7fd8, type: 3}
   pointsCanvas: {fileID: 1375514057}
   players: []
   perks: []
   selection: {fileID: 2043880526}
   placeableSelection: {fileID: 1443075223}
   spawnPoint: {fileID: 397515358}
-  killPlane: {fileID: 849292359}
   finishOrder: []
   placeablesRoot: {fileID: 990269926}
   placedPlaceables:
@@ -2546,7 +2546,7 @@ RectTransform:
   - {fileID: 1170925900}
   - {fileID: 1352468892}
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

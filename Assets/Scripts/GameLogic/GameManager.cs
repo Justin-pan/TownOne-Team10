@@ -138,12 +138,6 @@ public class GameManager : MonoBehaviour
         if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
             GameState = GameState.POINTS;
-            AssignPoints();
-            CalculatePlayerOrder();
-
-            GameState = GameState.PERK;
-            selection.StartSelection();
-
             Vector2 position = spawnPoint.transform.position;
             position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
 
