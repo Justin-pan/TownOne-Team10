@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public static readonly int GAME_WIDTH = 20; 
     public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
-    public const float POINTS_SCREEN_DELAY = 5f;
+    public const float POINTS_SCREEN_DELAY = 3f;
     public const int WINNING_SCORE = 15;
 
     public const int KILL_PLANE_OFFSET = 2;
@@ -342,7 +342,7 @@ public class GameManager : MonoBehaviour
 
         //eND OF PERK
         GenerateSelection();
-        GameState = GameState.BUILDING;
+        placeableCanvas.gameObject.SetActive(true);
     }
 
     
