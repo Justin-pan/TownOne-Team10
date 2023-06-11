@@ -5,10 +5,10 @@ using UnityEngine;
 public class Perk1 : Perk
 {
     // Start is called before the first frame update
-    void Start()
+    protected override void Start()
     {
+        base.Start();
         title = "Perk1";
-        GameManager.Instance.AddPerk(this);
     }
 
     // Update is called once per frame

@@ -1,25 +1,20 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.UIElements;
 
-public class Selection : MonoBehaviour
+public class PlaceableSelection : MonoBehaviour
 {
     private GameManager gm = GameManager.Instance;
     private List<Player> players;
-    private List<Perk> perks;
-    private HashSet<Perk> p;
+    private List<Placeable> placeable;
+    private HashSet<Placeable> p;
     private float position = 0f;
     private float shift;
     private float offset = 0f;
-    
+
 
     [SerializeField]
-    private Clicker clicker;
-    [SerializeField]
-    private Transform transform;
+    private PlaceableClicker placeableClicker;
     [SerializeField]
     RectTransform rectTransform;
 
@@ -27,8 +22,7 @@ public class Selection : MonoBehaviour
 
     public void StartSelection()
     {
-
-        perks = new List<Perk>(GameManager.Instance.Perks);
+        placeable = new List<Placeable>(GameManager.Instance.PlacedPlaceables);
         players = GameManager.Instance.Players;
         this.GenerateSelection();
         this.AddToCanvas();
@@ -36,15 +30,15 @@ public class Selection : MonoBehaviour
 
     private void GenerateSelection()
     {
-        p = new HashSet<Perk>();
+        p = new HashSet<Placeable>();
 
         System.Random rnd = new System.Random();
         int next = 0;
         for (int j = 0; j < players.Count; ++j)
         {
-            next = rnd.Next(perks.Count);
-            p.Add(perks[next]);
-            perks.Remove(perks[next]);
+            next = rnd.Next(placeable.Count);
+            p.Add(placeable[next]);
+            placeable.Remove(placeable[next]);
         }
     }
     private void AddToCanvas()
@@ -52,18 +46,14 @@ public class Selection : MonoBehaviour
 
         shift = rectTransform.rect.width / p.Count;
         position = -300f;
-        
-        foreach (Perk perk in p)
+
+        foreach (Placeable placeable in p)
         {
-            Clicker c = Instantiate(clicker);
+            PlaceableClicker c = Instantiate(placeableClicker);
             c.transform.SetParent(this.transform);
-            c.DisplayPerk = perk;
-            //c.transform.localScale = Vector3.one;
-            //c.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(position, transform.position.y + offset, 0);
+            c.DisplayPlaceable = placeable;
+            c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(position, 0, 0);
             position += shift;
         }
     }
-
-
 }

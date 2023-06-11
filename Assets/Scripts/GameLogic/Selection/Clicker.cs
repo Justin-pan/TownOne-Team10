@@ -15,6 +15,12 @@ public class Clicker : MonoBehaviour
         player.AddPerk(displayPerk);
         GameManager.Instance.FinishOrder.Remove(player);
         Destroy(gameObject);
+        if (GameManager.Instance.FinishOrder.Count == 0 && GameManager.Instance.GameState == GameState.PERK)
+        {
+            GameManager.Instance.GameState = GameState.BUILDING;
+            UnityEngine.Debug.Log("Moving to building");
+            GameManager.Instance.StartBuilding();
+        }
 
     }
 

@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1782346679807878396}
   - component: {fileID: 4656737745696555934}
   - component: {fileID: 5870079845063152658}
-  - component: {fileID: -2258337167455642153}
+  - component: {fileID: 5531411334996200563}
+  - component: {fileID: -4321529625381289658}
   m_Layer: 0
-  m_Name: BasicPlatform
+  m_Name: IcyPlatform
   m_TagString: Placeable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 141ca8d04e090bf4fb94b34e94ffb9f8, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 1, b: 0.88562393, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -112,7 +113,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 0.125}
   m_EdgeRadius: 0
---- !u!114 &-2258337167455642153
+--- !u!114 &5531411334996200563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4739370498237843564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 531adec0b8465d14e994fa6314d2d1ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IceFriction: 0.1
+--- !u!114 &-4321529625381289658
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

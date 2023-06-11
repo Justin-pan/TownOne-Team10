@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8806491920136824328}
   - component: {fileID: 7773293719697273220}
   - component: {fileID: 7773293719697273223}
+  - component: {fileID: 2616102905491998024}
   m_Layer: 0
   m_Name: BouncyPlatform
   m_TagString: Untagged
@@ -76,7 +77,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 141ca8d04e090bf4fb94b34e94ffb9f8, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -127,3 +128,15 @@ MonoBehaviour:
   m_InitialBounceForce: 10
   m_BounceForceDecrease: 10
   m_BounceResetDelay: 0
+--- !u!114 &2616102905491998024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8886551678565821946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f06b3704867e98541ba22f6ac7117830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
