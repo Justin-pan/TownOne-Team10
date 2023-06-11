@@ -120,7 +120,7 @@ public class PlacementHelper : MonoBehaviour
         }
         else
         {
-            throw new Exception("WHAT THE FUCK WHY DID IT FAIL???");
+            
         }
     }
 }
