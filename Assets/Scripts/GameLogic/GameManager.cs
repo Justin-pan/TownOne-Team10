@@ -11,6 +11,14 @@ public class GameManager : MonoBehaviour
 
     private bool roundFinished = false;
 
+    private GameState gameState = GameState.CLIMBING;
+
+    public GameState GameState
+    {
+        get => gameState;
+        set => gameState = value;
+    }
+
     [SerializeField]
     private List<Player> players;
 
@@ -100,6 +108,7 @@ public class GameManager : MonoBehaviour
 
         if (finishOrder.Count == players.Count && !roundFinished)
         {
+            gameState = GameState.PERK;
             selection.StartSelection();
             roundFinished = true;
         }
