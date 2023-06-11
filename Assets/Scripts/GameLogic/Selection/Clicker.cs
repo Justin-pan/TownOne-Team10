@@ -7,13 +7,6 @@ public class Clicker : MonoBehaviour
 
     private Perk displayPerk;
 
-    [SerializeField]
-    private Sprite SlowFallSprite;
-    [SerializeField]
-    private Sprite ExtraPointsSprite;
-    [SerializeField]
-    private Sprite BiggerDashSprite;
-
     private void OnMouseDown()
     {
         Player player = GameManager.Instance.FinishOrder[0];
@@ -42,20 +35,7 @@ public class Clicker : MonoBehaviour
 
     public void DisplayImage()
     {
-        string perkName = displayPerk.title;
-        switch (perkName)
-        {
-            case "Extra points":
-                GetComponent<SpriteRenderer>().sprite = ExtraPointsSprite;
-                break;
-            case "Bigger Dash":
-                GetComponent<SpriteRenderer>().sprite = BiggerDashSprite;
-                break;
-            case "Slow Fall":
-                GetComponent<SpriteRenderer>().sprite = SlowFallSprite;
-                break;
-            
-        }
+        GetComponent<SpriteRenderer>().sprite = displayPerk.sprite;
     }
 
     public Perk DisplayPerk

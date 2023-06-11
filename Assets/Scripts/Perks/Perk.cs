@@ -6,6 +6,7 @@ public class Perk : MonoBehaviour
 {
 
     public string title;
+    public Sprite sprite;
 
     protected string description;
     // Start is called before the first frame update
