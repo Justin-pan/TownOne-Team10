@@ -4,17 +4,49 @@ using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.UIElements;
+using TMPro;
+using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
     public static readonly int GAME_WIDTH = 20; 
     public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
-
+    public const float POINTS_SCREEN_DELAY = 3f;
     public const int WINNING_SCORE = 15;
+
     public const int KILL_PLANE_OFFSET = 2;
 
+    [SerializeField]
+    private KillPlane killPlane;
+
+
     private GameState gameState = GameState.CLIMBING;
+
+    [SerializeField]
+    private GameObject pointsBackground;
+
+    [SerializeField]
+    private GameObject pointsBar;
+    [SerializeField]
+    private GameObject pointsCanvas;
+
+    [SerializeField]
+    private GameObject perksCanvas;
+    [SerializeField]
+    private GameObject perksPrefab;
+
+    [SerializeField]
+    private GameObject placeableBackground;
+
+    [SerializeField]
+    private GameObject placeablePrefab;
+    [SerializeField]
+    private GameObject placeableCanvas;
+
+    [SerializeField]
+    private TextMeshProUGUI placeableText;
+
 
     [SerializeField]
     private List<Player> players;
@@ -30,9 +62,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private SpawnPoint spawnPoint;
-
-    [SerializeField]
-    private KillPlane killPlane;
 
     private Dictionary<Player, int> points;
 
@@ -50,6 +79,9 @@ public class GameManager : MonoBehaviour
     
     [SerializeField]
     private List<Placeable> placedPlaceables;
+
+    private Queue<Placeable> trapDraft;
+    private Queue<Perk> perkDraft;
 
     private Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
                                                                       // Keys: positions at which a placeable exists
@@ -79,6 +111,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+        pointsCanvas.gameObject.SetActive(false);
+        placeableCanvas.gameObject.SetActive(false);
+        perksCanvas.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -102,6 +137,10 @@ public class GameManager : MonoBehaviour
         playerPointOrder = new Queue<Player>();
         points = new Dictionary<Player, int>();
         gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>();
+        trapDraft = new Queue<Placeable>();
+        perkDraft = new Queue<Perk>();
+
+
     }
 
     public void AddPlayer(Player player)
@@ -119,31 +158,19 @@ public class GameManager : MonoBehaviour
     {
         if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
         {
-         
-            deadPlayers.Push(player);
-            //player.OnHit(new Hit(1, Vector2.zero));
-            player.gameObject.SetActive(false);
+            deadPlayers.Push(player); player.gameObject.SetActive(false);
             Debug.Log("Player " + player.PlayerID + " killed (KILL PLAYER)");
         }
 
         if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
             GameState = GameState.POINTS;
-            AssignPoints();
-            CalculatePlayerOrder();
-
-            GameState = GameState.PERK;
-            selection.StartSelection();
-
             Vector2 position = spawnPoint.transform.position;
             position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
 
             killPlane.transform.position = position;
             killPlane.enabled = false;
         }
-
-
-
     }
 
     public void FinishPlayer(Player player)
@@ -154,6 +181,10 @@ public class GameManager : MonoBehaviour
 
             if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
             {
+                if (points[player] >= PointsBar.MAX_POINTS && winningPlayers.Count == 0)
+                {
+                    SceneManager.LoadScene("EndScene");
+                }
                 winningPlayers.Enqueue(player);
                 player.gameObject.SetActive(false);
             }
@@ -162,20 +193,12 @@ public class GameManager : MonoBehaviour
         if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
             GameState = GameState.POINTS;
-            AssignPoints();
-            CalculatePlayerOrder();
-
-            GameState = GameState.PERK;
-            selection.StartSelection();
-
             Vector2 position = spawnPoint.transform.position;
             position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
 
             killPlane.transform.position = position;
             killPlane.enabled = false;
         }
-
-
     }
 
     private void CalculatePlayerOrder()
@@ -191,6 +214,7 @@ public class GameManager : MonoBehaviour
 
     private void AssignPoints()
     {
+
         while (winningPlayers.Count != 0)
         {
             Player p = winningPlayers.Dequeue();
@@ -210,23 +234,171 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartBuilding()
-    {
-        placeableSelection.StartSelection();
-        
-    }
+    
 
     public void StartClimbing()
     {
-        foreach (Player p in players)
+        if (players.Count == 0)
         {
-            p.ResetPlayer();
-            p.gameObject.SetActive(true);
+            spawnPoint.SpawnPlayers();
+        } 
+        else
+        {
+            foreach (Player p in players)
+            {
+                p.ResetPlayer();
+                p.gameObject.SetActive(true);
+            }
+
+            spawnPoint.RespawnPlayers();
+            killPlane.enabled = true;
+        }
+    }
+
+
+    private void StartPoints()
+    {
+        pointsCanvas.gameObject.SetActive(true);
+
+        for (int i = 0; i < players.Count; ++i)
+        {
+            GameObject pb = Instantiate(pointsBar);
+
+            pb.transform.SetParent(pointsCanvas.transform, false);
+
+            pb.GetComponent<RectTransform>().anchoredPosition = CalculateSpawnPosition(i);
+            PointsBar pointBarObj = pb.GetComponent<PointsBar>();
+            pointBarObj.SetText("Player " + (i + 1));
+
+            AssignPoints();
+            int newPoints = points[players[i]];
+
+            Debug.Log(newPoints);
+
+            pointBarObj.UpdatePoints(newPoints);
+
+        }
+        CalculatePlayerOrder();
+
+        StartCoroutine(WaitForTime());
+    }
+
+    private const int SHIFT = 5;
+
+    private Vector2 CalculateSpawnPosition(int index)
+    {
+        float canvasWidth = pointsBackground.GetComponent<RectTransform>().rect.width;
+        float canvasHeight = pointsBackground.GetComponent<RectTransform>().rect.height;
+
+        // Example: Spacing the point bars evenly vertically
+        float xPosition = (index * SHIFT - 5) * (canvasWidth / (players.Count + 1));
+
+        return new Vector2(xPosition, 0f);
+    }
+
+    public IEnumerator WaitForTime()
+    {
+        yield return new WaitForSeconds(POINTS_SCREEN_DELAY);
+
+        GeneratePerkSelection();
+        GameState = GameState.PERK;
+    }
+
+    
+    private void StartBuilding()
+    {
+        perksCanvas.gameObject.SetActive(false);
+        placeableCanvas.gameObject.SetActive(true);
+
+        SetPlaceableText(players.Count - PlayerPointOrder.Count + 1);
+        while (trapDraft.Count != 0)
+        {
+            Placeable placeable = trapDraft.Dequeue();
+
+            GameObject c = Instantiate(placeablePrefab);
+            Debug.Log("Instantiating");
+            c.transform.SetParent(placeableCanvas.transform, false);
+
+            c.GetComponent<RectTransform>().anchoredPosition = CalculatePlaceableSpawnPosition(players.Count - trapDraft.Count);
+           
+            PlaceableClicker pcObj = c.GetComponent<PlaceableClicker>();
+            pcObj.DisplayPlaceable = placeable;
+        }
+    }
+
+    public void SetPlaceableText(int i)
+    {
+        placeableText.text = "Player " + (i) + " is placing";
+    }
+
+    public void SetPerkText(int i)
+    {
+        placeableText.text = "Player " + (i) + " is selecting";
+    }
+
+    private Vector2 CalculatePlaceableSpawnPosition(int index)
+    {
+        float canvasWidth = pointsBackground.GetComponent<RectTransform>().rect.width;
+        float canvasHeight = pointsBackground.GetComponent<RectTransform>().rect.height;
+
+        // Example: Spacing the point bars evenly vertically
+        float xPosition = (index * SHIFT - 10) * (canvasWidth / (players.Count + 1));
+
+        return new Vector2(xPosition, 0f);
+    }
+
+    private void GenerateSelection()
+    {
+        System.Random rnd = new System.Random();
+        for (int j = 0; j < players.Count; ++j)
+        {
+            int next = rnd.Next(PlacedPlaceables.Count);
+            trapDraft.Enqueue(PlacedPlaceables[next]);
+        }
+    }
+
+    private void GeneratePerkSelection()
+    {
+        System.Random rnd = new System.Random();
+
+        for (int j = 0; j < players.Count; ++j)
+        {
+            int next = rnd.Next(Perks.Count);
+            perkDraft.Enqueue(Perks[next]);
+        }
+    }
+
+    private void StartPerk()
+    {
+        pointsCanvas.gameObject.SetActive(false);
+        perksCanvas.gameObject.SetActive(true);
+
+        SetPerkText(players.Count - PlayerPointOrder.Count + 1);
+        while (perkDraft.Count != 0)
+        {
+            Perk perk = perkDraft.Dequeue();
+
+            GameObject c = Instantiate(perksPrefab);
+            Debug.Log("Instantiating");
+            c.transform.SetParent(perksCanvas.transform, false);
+
+            c.GetComponent<RectTransform>().anchoredPosition = CalculatePlaceableSpawnPosition(players.Count - perkDraft.Count);
+
+            Clicker pcObj = c.GetComponent<Clicker>();
+            pcObj.DisplayPerk = perk;
+
+            pcObj.DisplayImage();
         }
 
-        spawnPoint.RespawnPlayers();
+        //eND OF PERK
+        GenerateSelection();
+    }
 
-        killPlane.enabled = true;
+    
+
+    public void StartPlacing()
+    {
+        placeableCanvas.gameObject.SetActive(false);
     }
 
     // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates
@@ -235,18 +407,20 @@ public class GameManager : MonoBehaviour
     {
         Vector3 originPosition = SnapToGamePosition(rawOriginPosition);
 
-        if (!placeable.IsPlacementValid(originPosition, gamePositionPlaceableDic))
-        {
-            return false;
-        }
-
         GameObject newPlacedGameObject = Instantiate(placeable.gameObject);
         Placeable newPlacedPlaceable = newPlacedGameObject.GetComponent<Placeable>();
+
+        if (!newPlacedPlaceable.IsPlacementValid(originPosition, gamePositionPlaceableDic))
+        {
+            Destroy(newPlacedGameObject);
+            return false;
+        }
 
         newPlacedPlaceable.SetOriginPosition(originPosition);
         newPlacedGameObject.transform.parent = placeablesRoot.transform;
         newPlacedGameObject.transform.position = newPlacedPlaceable.GetCenterInWorldCoordinates();
-        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTakenGameCoordinates(originPosition))
+        newPlacedPlaceable.GetSpaceTakenGameCoordinates(originPosition);
+        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTaken())
         {
             gamePositionPlaceableDic.Add(pos, newPlacedPlaceable);
         }
@@ -282,7 +456,36 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Switching to " + value + " from " + gameState);
             gameState = value;
+            switch (gameState)
+            {
+                case GameState.CLIMBING:
+                    StartClimbing();
+                    break;
+                case GameState.POINTS:
+                    StartPoints();
+                    break;
+                case GameState.PERK:
+                    StartPerk();
+                    break;
+                case GameState.BUILDING:
+                    StartBuilding();
+                    break;
+                case GameState.PLACING:
+                    StartPlacing();
+                    break;
+                case GameState.ENDING:
+                    StartEnding();
+                    break;
+                default:
+                    break;
+
+            }
         } 
+    }
+
+    private void StartEnding()
+    {
+        throw new NotImplementedException();
     }
 
     public List<Perk> Perks

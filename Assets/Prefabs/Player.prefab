@@ -106,8 +106,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 2061803165
+  m_SortingLayer: 1
   m_SortingOrder: -1
   m_Sprite: {fileID: 21300000, guid: 3f4b0ef4aa6c0b04aa7155e5623fd90b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -197,9 +197,12 @@ MonoBehaviour:
   dashKnockback: 40
   traction: 1
   airTraction: 1
+  placeablesPerRound: 1
   inputDirectionPrefix: horizontal_p
   inputJumpPrefix: jump_p
   inputDashPrefix: dash_p
+  inputPlacePrefix: place_p
   groundCheck: {fileID: 7223263206084463783}
   groundCheckRadius: 0.02
   minHorizontalDashSpeed: 0.5
+  placeableToPlace: {fileID: -2258337167455642153, guid: 71a1464eb5c567647b00debf6b92cefd, type: 3}

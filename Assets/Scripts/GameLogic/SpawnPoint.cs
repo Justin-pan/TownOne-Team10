@@ -64,7 +64,7 @@ public class SpawnPoint : MonoBehaviour
     }
 
 
-    private void SpawnPlayers()
+    public void SpawnPlayers()
     {
         Vector3 spawnAreaCenter = spawnCenter.position;
         Vector3 spawnAreaSize = new Vector3(spawnAreaWidth, spawnAreaLength, 0f);
