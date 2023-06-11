@@ -260,7 +260,7 @@ MonoBehaviour:
   m_text: You are the G.O.A.T.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
-  m_sharedMaterial: {fileID: -2659607073206303680, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
+  m_sharedMaterial: {fileID: -1197530742038903601, guid: a0e1e83a7097c104bb7b6afa4314dd74, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
