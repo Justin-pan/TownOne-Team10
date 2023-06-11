@@ -50,6 +50,15 @@ public class DynamicCamera : MonoBehaviour
             camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, MAX_ZOOM, SCALING_SPEED * Time.deltaTime);
             ControlCamera();
         }
+
+        foreach (Player player in GameManager.Instance.DeadPlayers)
+        {
+            if (!bound.Contains(player.transform.position))
+            {
+                // Freeze dead players once they are off screen
+                player.gameObject.SetActive(false);
+            }
+        }
     }
 
     private void ControlCamera()
@@ -67,9 +76,13 @@ public class DynamicCamera : MonoBehaviour
 
         foreach (Player player in GameManager.Instance.Players)
         {
-            bound.Encapsulate(player.transform.position);
+            if (!GameManager.Instance.DeadPlayers.Contains(player))
+            {
+                bound.Encapsulate(player.transform.position);
+            }
         }
 
+        bound.Expand(bottomMargin);
         return bound;
     }
 
