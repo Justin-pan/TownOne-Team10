@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour
     public const float POINTS_SCREEN_DELAY = 10f;
     public const int WINNING_SCORE = 15;
 
+    public const int KILL_PLANE_OFFSET = 2;
+
+    [SerializeField]
+    private KillPlane killPlane;
+
 
     private GameState gameState = GameState.CLIMBING;
 
@@ -86,6 +91,17 @@ public class GameManager : MonoBehaviour
         pointsCanvas.gameObject.SetActive(false);
     }
 
+    private void Start()
+    {
+        killPlane.transform.localScale = new Vector3(GAME_WIDTH * 2, GAME_HEIGHT, 1);
+
+        Vector2 position = spawnPoint.transform.position;
+        position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
+
+        killPlane.transform.position = position;
+        killPlane.enabled = true;
+    }
+
     private GameManager()
     {
         players = new List<Player>();
@@ -115,7 +131,24 @@ public class GameManager : MonoBehaviour
     {
         if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
         {
-            deadPlayers.Push(player);
+            deadPlayers.Push(player); player.gameObject.SetActive(false);
+            Debug.Log("Player " + player.PlayerID + " killed (KILL PLAYER)");
+        }
+
+        if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
+        {
+            GameState = GameState.POINTS;
+            AssignPoints();
+            CalculatePlayerOrder();
+
+            GameState = GameState.PERK;
+            selection.StartSelection();
+
+            Vector2 position = spawnPoint.transform.position;
+            position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
+
+            killPlane.transform.position = position;
+            killPlane.enabled = false;
         }
     }
 
@@ -128,12 +161,18 @@ public class GameManager : MonoBehaviour
             if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
             {
                 winningPlayers.Enqueue(player);
+                player.gameObject.SetActive(false);
             }
         }
 
         if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
             GameState = GameState.POINTS;
+            Vector2 position = spawnPoint.transform.position;
+            position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
+
+            killPlane.transform.position = position;
+            killPlane.enabled = false;
         }
     }
 
@@ -183,9 +222,11 @@ public class GameManager : MonoBehaviour
             foreach (Player p in players)
             {
                 p.ResetPlayer();
+                p.gameObject.SetActive(true);
             }
 
             spawnPoint.RespawnPlayers();
+            killPlane.enabled = true;
         }
     }
 
