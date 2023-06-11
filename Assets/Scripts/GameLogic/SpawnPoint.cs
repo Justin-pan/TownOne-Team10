@@ -12,7 +12,7 @@ public class SpawnPoint : MonoBehaviour
     [SerializeField]
     private GameObject playerParent;
     [SerializeField]
-    private float spawnAreaWidth = 2f;
+    private float spawnAreaWidth = 1f;
     [SerializeField]
     private float spawnAreaLength = 10f;
 

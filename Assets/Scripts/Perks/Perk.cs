@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Perk : MonoBehaviour
 {
-    protected string title;
+
+    public string title;
+
     protected string description;
     // Start is called before the first frame update
     protected virtual void Start()
@@ -16,5 +18,7 @@ public class Perk : MonoBehaviour
     {
 
     }
+
+    
 
 }

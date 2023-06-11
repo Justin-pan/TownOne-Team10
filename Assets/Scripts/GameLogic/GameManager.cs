@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
 
     public const int WINNING_SCORE = 15;
 
-    private bool roundFinished = false;
 
     private GameState gameState = GameState.CLIMBING;
 
