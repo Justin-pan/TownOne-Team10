@@ -100,27 +100,38 @@ public class GameManager : MonoBehaviour
 
     public void KillPlayer(Player player)
     {
-        deadPlayers.Push(player);
+        if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
+        {
+            deadPlayers.Push(player);
+        }
     }
 
     public void FinishPlayer(Player player)
     {
-        if (!finishOrder.Contains(player) && gameState == GameState.CLIMBING)
+        if (gameState == GameState.CLIMBING)
         {
             Debug.Log("Player " + player.PlayerID + " finished");
-            winningPlayers.Enqueue(player);
+
+            if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
+            {
+                winningPlayers.Enqueue(player);
+            }
         }
 
         if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
             gameState = GameState.POINTS;
-
             AssignPoints();
             CalculatePlayerOrder();
 
             gameState = GameState.PERK;
             selection.StartSelection();
         }
+    }
+
+    private void DisablePlayers()
+    {
+       
     }
 
     private void CalculatePlayerOrder()
