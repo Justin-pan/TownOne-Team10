@@ -32,7 +32,8 @@ public class DynamicCamera : MonoBehaviour
     // Update is called once per frame
     private void LateUpdate()
     {
-        if (GameManager.Instance.GameState != GameState.BUILDING)
+        GameState currentGameState = GameManager.Instance.GameState;
+        if (currentGameState != GameState.BUILDING && currentGameState != GameState.PLACING)
         {
             bound = CreateBound();
             SetBound();
