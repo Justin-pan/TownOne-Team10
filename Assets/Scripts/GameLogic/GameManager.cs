@@ -14,27 +14,16 @@ public class GameManager : MonoBehaviour
 
     private GameState gameState = GameState.CLIMBING;
 
-    public GameState GameState
-    {
-        get => gameState;
-        set => gameState = value;
-    }
 
     [SerializeField]
     private List<Player> players;
 
-    public List<Player> Players
-    {
-        get => players;
-    }
+  
 
     [SerializeField]
     private List<Perk> perks;
 
-    public List<Perk> Perks
-    {
-        get => perks;
-    }
+  
 
     [SerializeField]
     private Selection selection;
@@ -44,25 +33,16 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<Player, int> points;
 
-    public Dictionary<Player, int> Points
-    {
-        get => points;
-    }
+   
 
     private Queue<Player> playerPointOrder;
 
-    public Queue<Player> PlayerPointOrder
-    {
-        get => playerPointOrder;
-    }
+  
 
     [SerializeField]
     private List<Player> finishOrder;
 
-    public List<Player> FinishOrder
-    {
-        get => finishOrder;
-    }
+
 
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
@@ -70,11 +50,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<Placeable> placedPlaceables;
 
-    public List<Placeable> PlacedPlaceables
-    {
-        get => placedPlaceables;
-        set => placedPlaceables = value;
-    }
+ 
     private Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
                                                                       // Keys: positions at which a placeable exists
                                                                       // Values: the placeable at that location
@@ -128,7 +104,7 @@ public class GameManager : MonoBehaviour
 
     public void FinishPlayer(Player player)
     {
-        if (!finishOrder.Contains(player))
+        if (!finishOrder.Contains(player) && gameState == GameState.CLIMBING)
         {
             Debug.Log("Player " + player.PlayerID + " finished");
             finishOrder.Add(player);
@@ -136,6 +112,12 @@ public class GameManager : MonoBehaviour
 
         if (finishOrder.Count == players.Count && !roundFinished)
         {
+            foreach (Player p in players)
+            {
+                points[p] += (int) p.PlayerMaxHeight;
+                
+            }
+
             List<KeyValuePair<Player, int>> sortedList = points.OrderByDescending(x => x.Value).ToList();
 
             
@@ -209,6 +191,44 @@ public class GameManager : MonoBehaviour
     public Dictionary<Vector3, Placeable> GetGamePositionPlaceableDic()
     {
         return gamePositionPlaceableDic;
+    }
+
+
+    public GameState GameState
+    {
+        get => gameState;
+        set => gameState = value;
+    }
+
+    public List<Perk> Perks
+    {
+        get => perks;
+    }
+
+    public List<Player> Players
+    {
+        get => players;
+    }
+
+    public Dictionary<Player, int> Points
+    {
+        get => points;
+    }
+
+    public Queue<Player> PlayerPointOrder
+    {
+        get => playerPointOrder;
+    }
+
+    public List<Player> FinishOrder
+    {
+        get => finishOrder;
+    }
+
+    public List<Placeable> PlacedPlaceables
+    {
+        get => placedPlaceables;
+        set => placedPlaceables = value;
     }
 
     // EO Getters and Setters ===========================
