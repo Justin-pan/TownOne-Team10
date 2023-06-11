@@ -14,9 +14,7 @@ public class SlowFall : Perk
 
     public override void ApplyEffect(Player player)
     {
-        player.GetComponent<Rigidbody2D>().gravityScale = player.GetComponent<Rigidbody2D>().gravityScale * 0.5f;
-        Debug.Log("SlowFall");
-
+        player.GetComponent<Rigidbody2D>().gravityScale = player.GetComponent<Rigidbody2D>().gravityScale * 0.8f;
     }
 
     
