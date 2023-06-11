@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private PlaceableSelection placeableSelection;
 
+    [SerializeField]
+    private SpawnPoint spawnPoint;
+
     private Dictionary<Player, int> points;
 
     private Queue<Player> playerPointOrder; //INVARIANT: Only Contains elements during Trap Drafting Phase
@@ -129,11 +132,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void DisablePlayers()
-    {
-       
-    }
-
     private void CalculatePlayerOrder()
     {
         List<KeyValuePair<Player, int>> sortedList = points.OrderByDescending(x => x.Value).ToList();
@@ -176,9 +174,9 @@ public class GameManager : MonoBehaviour
         foreach (Player p in players)
         {
             p.ResetPlayer();
-
         }
 
+        spawnPoint.RespawnPlayers();
     }
 
     // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates
