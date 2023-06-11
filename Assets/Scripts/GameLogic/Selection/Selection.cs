@@ -52,9 +52,6 @@ public class Selection : MonoBehaviour
         }
         UnityEngine.Debug.Log("Finsih generating" + p.Count);
     }
-
-
-
     private void AddToCanvas()
     {
 
@@ -65,7 +62,7 @@ public class Selection : MonoBehaviour
         foreach (Perk perk in p)
         {
             Clicker c = Instantiate(clicker);
-            c.transform.parent = this.transform;
+            c.transform.SetParent(this.transform);
             c.DisplayPerk = perk;
             //c.transform.localScale = Vector3.one;
             //c.transform.localRotation = Quaternion.Euler(Vector3.zero);
@@ -74,5 +71,14 @@ public class Selection : MonoBehaviour
             UnityEngine.Debug.Log("Creating at " + position);
         }
     }
-   
+
+    public void Update()
+    {
+        if (GameManager.Instance.FinishOrder.Count == 0 && GameManager.Instance.GameState == GameState.PERK)
+        {
+            GameManager.Instance.GameState = GameState.BUILDING;
+            UnityEngine.Debug.Log("Moving to building");
+        }
+    }
+
 }
