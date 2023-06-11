@@ -41,7 +41,12 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private PlaceableSelection placeableSelection;
 
+    private Dictionary<Player, int> points;
 
+    public Dictionary<Player, int> Points
+    {
+        get => points;
+    }
 
     [SerializeField]
     private List<Player> finishOrder;
@@ -103,6 +108,7 @@ public class GameManager : MonoBehaviour
     public void AddPlayer(Player player)
     {
         players.Add(player);
+        Points.Add(player, 0);
     }
 
     public void AddPerk(Perk perk)
