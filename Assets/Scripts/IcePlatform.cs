@@ -6,18 +6,19 @@ public class IcePlatform : MonoBehaviour
 {
 
     [SerializeField]
-    private float m_IceFriction = 0.1f;
+    private float new_traction = 0f;
 
-    private float m_OldFriction = 0.0f;
+    private float old_traction = 0.0f;
 
-    private void OnCollisionEnter2d(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.GetComponent<PlayerController>())
         {
-            Rigidbody2D playerBody = collision.gameObject.GetComponent<Rigidbody2D>();
-            m_OldFriction = playerBody.sharedMaterial.friction;
+            PlayerController playerBody = collision.gameObject.GetComponent<PlayerController>();
+            old_traction = playerBody.traction;
 
-            playerBody.sharedMaterial.friction = m_IceFriction;
+            playerBody.traction = new_traction;
+            Debug.Log("set to " + old_traction);
         }
     }
 
@@ -25,9 +26,9 @@ public class IcePlatform : MonoBehaviour
     {
         if (collision.gameObject.GetComponent<PlayerController>())
         {
-            Rigidbody2D playerBody = collision.gameObject.GetComponent<Rigidbody2D>();
-
-            playerBody.sharedMaterial.friction = m_OldFriction;
+            PlayerController playerBody = collision.gameObject.GetComponent<PlayerController>();
+            playerBody.traction = old_traction;
+            Debug.Log("set to " + old_traction);
         }
 
     }
