@@ -3,9 +3,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [Header("Technical")]
-    [SerializeField] private RuntimeAnimatorController m_AnimatorController;
-
     [Header("Parameters")]
     [SerializeField] public int maxHealth;
 
@@ -13,7 +10,6 @@ public class Player : MonoBehaviour
 
     // [Components]
     private Rigidbody2D mRigidbody2D;
-    private Animator m_CurrentAnimation;
 
     private int currentHealth;
     private List<Perk> perks;
