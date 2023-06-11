@@ -2,14 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Perk : MonoBehaviour
+public class Perk4 : Perk
 {
-    protected string title;
-    protected string description;
     // Start is called before the first frame update
-    protected virtual void Start()
-    { 
-        GameManager.Instance.AddPerk(this);
+    protected override void Start()
+    {
+        base.Start();
+        title = "Perk4";
     }
 
     // Update is called once per frame

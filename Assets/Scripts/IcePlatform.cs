@@ -18,7 +18,7 @@ public class IcePlatform : MonoBehaviour
             old_traction = playerBody.traction;
 
             playerBody.traction = new_traction;
-            
+            Debug.Log("set to " + old_traction);
         }
     }
 
@@ -28,7 +28,7 @@ public class IcePlatform : MonoBehaviour
         {
             PlayerController playerBody = collision.gameObject.GetComponent<PlayerController>();
             playerBody.traction = old_traction;
-           
+            Debug.Log("set to " + old_traction);
         }
 
     }

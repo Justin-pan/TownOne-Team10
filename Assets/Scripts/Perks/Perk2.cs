@@ -2,19 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExtraPoints : Perk
+public class Perk2 : Perk
 {
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
-        title = "Extra points";
+        title = "Perk2";
     }
 
-    public override void ApplyEffect(Player player)
+    // Update is called once per frame
+    void Update()
     {
-        //player.AddPoints(200); no point implementation yet
-        Debug.Log("ExtraPoints");
+        
     }
-
 }
