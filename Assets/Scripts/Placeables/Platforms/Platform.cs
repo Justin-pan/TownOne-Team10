@@ -5,9 +5,9 @@ using UnityEngine;
 // Works for all Platforms (can be placed anywhere that isn't intersecting)
 public class Platform : Placeable
 {
-    public override bool IsPlacementValid(Vector3 originPosition, List<Placeable> placedPlaceables, Dictionary<Vector3, Placeable> gamePositionPlaceableDic)
+    public override bool IsPlacementValid(Vector3 originPosition, Dictionary<Vector3, Placeable> gamePositionPlaceableDic)
     {
-        return IsNotIntersectingOthers(originPosition, placedPlaceables, gamePositionPlaceableDic) && IsNotOutOfBounds(originPosition);
+        return IsNotIntersectingOthers(originPosition, gamePositionPlaceableDic) && IsNotOutOfBounds(originPosition);
     }
 
     protected override void DefineDimensions()
