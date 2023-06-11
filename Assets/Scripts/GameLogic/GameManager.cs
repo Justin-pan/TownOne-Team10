@@ -14,16 +14,11 @@ public class GameManager : MonoBehaviour
 
     private GameState gameState = GameState.CLIMBING;
 
-
     [SerializeField]
     private List<Player> players;
 
-  
-
     [SerializeField]
     private List<Perk> perks;
-
-  
 
     [SerializeField]
     private Selection selection;
@@ -33,16 +28,10 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<Player, int> points;
 
-   
-
     private Queue<Player> playerPointOrder;
-
-  
 
     [SerializeField]
     private List<Player> finishOrder;
-
-
 
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
@@ -50,7 +39,6 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<Placeable> placedPlaceables;
 
- 
     private Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
                                                                       // Keys: positions at which a placeable exists
                                                                       // Values: the placeable at that location
