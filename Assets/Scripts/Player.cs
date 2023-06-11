@@ -236,10 +236,16 @@ public class Player : MonoBehaviour
             }
             mRigidbody2D.velocity = Vector2.zero;
             Debug.Log(new Vector3(transform.position.x, groundCheck.position.y - 0.5f, transform.position.z));
-            if (GameManager.Instance.TryPlace(placeableToPlace, new Vector3(transform.position.x, groundCheck.position.y - 0.5f, transform.position.z)))
+            try
             {
-                platformsLeft -= 1;
-                Debug.Log("Placed!");
+                if (GameManager.Instance.TryPlace(placeableToPlace, new Vector3(transform.position.x, groundCheck.position.y - 0.5f, transform.position.z)))
+                {
+                    platformsLeft -= 1;
+                    Debug.Log("Placed!");
+                }
+            } catch (ArgumentException e)
+            {
+                // dw everything is fine (that is a lie)
             }
         }
     }
