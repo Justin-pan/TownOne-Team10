@@ -3001,7 +3001,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clicker: {fileID: 9052059756695791145, guid: 413a33122c80947df81d99025ad468d3, type: 3}
-  transform: {fileID: 2043880525}
   rectTransform: {fileID: 173219636}
 --- !u!1001 &2096954047
 PrefabInstance:
