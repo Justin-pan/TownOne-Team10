@@ -51,7 +51,7 @@ public class Selection : MonoBehaviour
     {
 
         shift = rectTransform.rect.width / p.Count;
-        position = -300f;
+        position = transform.position.x - (p.Count - 1) * shift / 2;
         
         foreach (Perk perk in p)
         {
