@@ -45,6 +45,9 @@ TagManager:
   - name: Placeable
     uniqueID: 2061803165
     locked: 0
+  - name: Player
+    uniqueID: 1335248651
+    locked: 0
   - name: UI Sorting
     uniqueID: 3237845893
     locked: 0
