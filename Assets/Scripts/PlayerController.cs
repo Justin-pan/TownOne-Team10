@@ -21,9 +21,9 @@ public class PlayerController : MonoBehaviour
     [Range(0, 1)][SerializeField] private float traction;
     [Range(0, 1)][SerializeField] private float airTraction;
 
-    public bool IsGrounded { get; set; }
-    public bool IsDashReady { get; set; }
-    public bool IsDashing { get; set; }
+    private bool isGrounded;
+    private bool isDashReady;
+    private bool isDashing;
 
     // [Components]
     private Rigidbody2D mRigidbody2D;
@@ -35,13 +35,13 @@ public class PlayerController : MonoBehaviour
         mRigidbody2D = GetComponent<Rigidbody2D>();
 
         currentVelocity = Vector2.zero;
-        IsGrounded = IsDashReady = IsDashing = false;
+        isGrounded = isDashReady = isDashing = false;
     }
 
     private void Update()
     {
         // Ignore player input while dashing.
-        if (IsDashing)
+        if (isDashing)
         {
             return;
         }
@@ -52,14 +52,14 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        IsGrounded = false;
+        isGrounded = false;
 
         // The player is grounded if there is anything solid directly below.
         foreach (Collider2D c in Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius))
         {
             if (c.gameObject != gameObject)
             {
-                IsGrounded = IsDashReady = true;
+                isGrounded = isDashReady = true;
             }
         }
     }
@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Colliding with anything solid immediately ends the dash.
-        IsDashing = false;
+        isDashing = false;
 
         if (collision.gameObject.TryGetComponent(out Player player))
         {
@@ -81,24 +81,24 @@ public class PlayerController : MonoBehaviour
         target.x = inputDirection * moveSpeed;
 
         mRigidbody2D.velocity = Vector2.SmoothDamp(mRigidbody2D.velocity, target, ref currentVelocity,
-            IsGrounded ? 1 - traction : 1 - airTraction);
+            isGrounded ? 1 - traction : 1 - airTraction);
 
-        if (IsGrounded && inputJump)
+        if (isGrounded && inputJump)
         {
             Vector3 velocity = currentVelocity;
             velocity.y = jumpSpeed;
 
             mRigidbody2D.velocity = velocity;
-            IsGrounded = false;
+            isGrounded = false;
         }
     }
 
     private void HandleDash(float inputDirection, bool inputJump, bool inputDash)
     {
-        if (IsDashReady && inputDash)
+        if (isDashReady && inputDash)
         {
             float x = inputDirection > minHorizontalDashSpeed ? 1 : inputDirection < -minHorizontalDashSpeed ? -1 : 0;
-            float y = !IsGrounded && inputJump ? 1 : 0;
+            float y = !isGrounded && inputJump ? 1 : 0;
 
             Vector2 dashTarget = new Vector2(x, y) * dashSpeed;
 
@@ -111,13 +111,13 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator DashController(Vector2 target)
     {
-        IsDashReady = false;
-        IsDashing = true;
+        isDashReady = false;
+        isDashing = true;
 
         float gravityScale = mRigidbody2D.gravityScale;
         mRigidbody2D.gravityScale = 0;
 
-        for (float t = 0; IsDashing && t < dashDuration; t += Time.deltaTime)
+        for (float t = 0; isDashing && t < dashDuration; t += Time.deltaTime)
         {
             mRigidbody2D.velocity = Vector2.Lerp(target, Vector2.zero, t / dashDuration);
             yield return null;
@@ -126,6 +126,34 @@ public class PlayerController : MonoBehaviour
         mRigidbody2D.velocity = Vector2.zero;
         mRigidbody2D.gravityScale = gravityScale;
 
-        IsDashing = false;
+        isDashing = false;
+    }
+
+    public PlayerState CurrentState()
+    {
+        if (isDashing)
+        {
+            return PlayerState.Dashing;
+        }
+        else if (!isGrounded && currentVelocity.y > 0)
+        {
+            return PlayerState.Jumping;
+        }
+        else if (!isGrounded && currentVelocity.y <= 0)
+        {
+            return PlayerState.Falling;
+        }
+        else if (isGrounded && currentVelocity.x == 0)
+        {
+            return PlayerState.Idle;
+        }
+        else if (isGrounded && currentVelocity.x != 0)
+        {
+            return PlayerState.Moving;
+        }
+        else
+        {
+            return PlayerState.Idle;
+        }
     }
 }

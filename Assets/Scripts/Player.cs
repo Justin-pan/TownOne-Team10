@@ -4,29 +4,33 @@ public class Player : MonoBehaviour
 {
     [Header("Parameters")]
     [SerializeField] private int m_MaxHealth;
-    private Animator m_CurrentAnimation;
-    [SerializeField]
-    private RuntimeAnimatorController m_AnimatorController;
     [SerializeField] private int maxHealth;
 
     public int PlayerID { get; set; }
 
+    private PlayerState m_PlayerState;
+
     // [Components]
     private Rigidbody2D mRigidbody2D;
 
+    private PlayerController m_PlayerController;
+
     private int currentHealth;
 
-    private PlayerState m_PlayerState;
+    private Animator m_Animator;
 
+    private bool m_WasDashReady;
+
+    private bool isDead = false;
 
     private void Awake()
     {
-        mRigidbody2D = GetComponent<Rigidbody2D>();
         m_PlayerState = PlayerState.Idle;
 
         currentHealth = maxHealth;
-        m_CurrentAnimation = GetComponent<Animator>();
-        m_CurrentAnimation.runtimeAnimatorController = m_AnimatorController;
+        mRigidbody2D = GetComponent<Rigidbody2D>();
+        m_PlayerController = GetComponent<PlayerController>();
+        m_Animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -37,14 +41,13 @@ public class Player : MonoBehaviour
     public void Update()
     {
         // TODO
+        m_PlayerState = m_PlayerController.CurrentState();
         switch(m_PlayerState)
         {
             case PlayerState.Idle:
-                m_CurrentAnimation.SetBool("Moving", false);
                 // TODO implement Idle
                 break;
             case PlayerState.Moving:
-                m_CurrentAnimation.SetBool("Moving", true);
                 // TODO implement Moving
                 break;
            case PlayerState.Jumping:
