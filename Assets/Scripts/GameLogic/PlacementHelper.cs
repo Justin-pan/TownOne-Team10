@@ -46,6 +46,7 @@ public class PlacementHelper : MonoBehaviour
     {
         if (isPlacing)
         {
+            currentPlacing.SetOriginPosition(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)));
             if (currentPlacing.IsPlacementValid(GameManager.SnapToGamePosition(mainCamera.ScreenToWorldPoint(Input.mousePosition)), 
                 GameManager.Instance.GetGamePositionPlaceableDic()))  // this is true if the placement at the mouse position
                                                                       // (after snapping) is valid

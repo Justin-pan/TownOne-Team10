@@ -51,16 +51,28 @@ public abstract class Placeable : MonoBehaviour
     protected bool IsNotIntersectingOthers(Vector3 originPosition,
         Dictionary<Vector3, Placeable> gamePositionPlaceableDic)
     {
-        GetSpaceTakenGameCoordinates(originPosition);
         foreach (Vector3 pos in gamePositionPlaceableDic.Keys)
         {
-            if (this.SpaceTaken.Contains(pos))
+            if (PlaceableContainsPos(pos))
             {
                 return false;
             }
         }
 
         return true;
+    }
+
+    public bool PlaceableContainsPos(Vector3 Pos)
+    {
+        if (Pos.x <= originPosition.x + width && Pos.x >= originPosition.x
+            && Pos.y <= originPosition.y + height && Pos.y >= originPosition.y)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public List<Vector3> GetSpaceTaken()

@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
 
     [Range(0, 1)][SerializeField] public float traction;
     [Range(0, 1)][SerializeField] public float airTraction;
-
     [SerializeField] public int placeablesPerRound;
 
     [Header("Technical")]
@@ -35,7 +34,6 @@ public class Player : MonoBehaviour
     [SerializeField] private Placeable placeableToPlace;
 
     private int platformsLeft;
-
 
     public int PlayerID { get; set; }
 
@@ -241,6 +239,7 @@ public class Player : MonoBehaviour
             platformsLeft -= 1;
         }
     }
+
     private IEnumerator DashController(Vector2 target)
     {
         isDashReady = false;
