@@ -17,8 +17,9 @@ public class PlaceableClicker : MonoBehaviour
             spriteRenderer.sprite = newSprite;
         }
     }
-    private void OnMouseDown()
+    private void OnMouseUp()
     {
+
         Player placingPlayer = GameManager.Instance.PlayerPointOrder.Dequeue();
         PlacementHelper.Instance.PlacePlaceable(displayPlaceable);
         Destroy(gameObject);
