@@ -13,13 +13,10 @@ public class Selection : MonoBehaviour
     private HashSet<Perk> p;
     private float position = 0f;
     private float shift;
-    private float offset = 0f;
     
 
     [SerializeField]
     private Clicker clicker;
-    [SerializeField]
-    private Transform transform;
     [SerializeField]
     RectTransform rectTransform;
 
@@ -61,7 +58,7 @@ public class Selection : MonoBehaviour
             c.DisplayImage();
             //c.transform.localScale = Vector3.one;
             //c.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(position, transform.position.y + offset, 0);
+            c.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(position, 0, 0);
             position += shift;
         }
     }
