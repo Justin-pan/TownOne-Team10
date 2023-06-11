@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class Player : MonoBehaviour
 {
@@ -17,15 +18,24 @@ public class Player : MonoBehaviour
     [Range(0, 1)][SerializeField] public float traction;
     [Range(0, 1)][SerializeField] public float airTraction;
 
+    [SerializeField] public int placeablesPerRound;
+
     [Header("Technical")]
     [SerializeField] private string inputDirectionPrefix;
     [SerializeField] private string inputJumpPrefix;
     [SerializeField] private string inputDashPrefix;
+    [SerializeField] private string inputPlacePrefix;
 
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius;
 
     [SerializeField] private float minHorizontalDashSpeed;
+
+    [Header("Other")]
+    [SerializeField] private Placeable placeableToPlace;
+
+    private int platformsLeft;
+
 
     public int PlayerID { get; set; }
 
@@ -104,6 +114,7 @@ public class Player : MonoBehaviour
                 Input.GetButtonDown(inputJumpPrefix + PlayerID));
             HandleDash(Input.GetAxis(inputDirectionPrefix + PlayerID),
                 Input.GetButton(inputJumpPrefix + PlayerID), Input.GetButton(inputDashPrefix + PlayerID));
+            HandlePlace(Input.GetButtonDown(inputPlacePrefix + PlayerID));
         }
         m_PlayerState = (mRigidbody2D.velocity.y < 0) ? PlayerState.Falling : m_PlayerState;
         m_PlayerState = (stillHurt) ? PlayerState.Hurt : m_PlayerState;
@@ -217,6 +228,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void HandlePlace(bool buttonDown)
+    {
+        if (buttonDown)
+        {
+            if (platformsLeft <= 0)
+            {
+                return;
+            }
+            mRigidbody2D.velocity = Vector2.zero;
+            GameManager.Instance.TryPlace(placeableToPlace, new Vector3(transform.position.x, groundCheck.position.y - 0.5f, transform.position.z));
+            platformsLeft -= 1;
+        }
+    }
     private IEnumerator DashController(Vector2 target)
     {
         isDashReady = false;
@@ -249,5 +273,6 @@ public class Player : MonoBehaviour
         isDead = false;
         stillHurt = false;
         playerMaxHeight = 0;
+        platformsLeft = placeablesPerRound;
     }
 }

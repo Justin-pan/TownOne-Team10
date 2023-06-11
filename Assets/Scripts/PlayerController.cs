@@ -56,19 +56,6 @@ public class PlayerController : MonoBehaviour
 
     //     HandleMove(Input.GetAxis(inputDirectionPrefix + mPlayer.PlayerID),
     //         Input.GetButtonDown(inputJumpPrefix + mPlayer.PlayerID));
-
-    private void HandlePlace(bool buttonDown)
-    {
-        if (buttonDown)
-        {
-            if (platformsLeft <=0)
-            {
-                return;
-            }
-            GameManager.Instance.TryPlace(blockToPlace, new Vector3(mPlayer.transform.position.x, mPlayer.transform.position.y - 1f, mPlayer.transform.position.z));
-            platformsLeft -= 1;
-        }
-    }
     //     HandleDash(Input.GetAxis(inputDirectionPrefix + mPlayer.PlayerID),
     //         Input.GetButton(inputJumpPrefix + mPlayer.PlayerID), Input.GetButtonDown(inputDashPrefix + mPlayer.PlayerID));
     // }
@@ -161,8 +148,4 @@ public class PlayerController : MonoBehaviour
     //     mRigidbody2D.gravityScale = gravityScale;
     //     IsDashing = false;
     // }
-        public void SetPlatformsLeft(int i)
-    {
-        platformsLeft = i;
-    }
 }
