@@ -38,7 +38,7 @@ public abstract class Placeable : MonoBehaviour
     // returns the center of this placeable, in world position. Useful for placing the prefab in the world
     public virtual Vector3 GetCenterInWorldCoordinates()
     {
-        return new Vector3(originPosition.x + (width / 2f), originPosition.y + (height / 2f));
+        return new Vector3(originPosition.x + ((float)width / 2f), originPosition.y + ((float)height / 2f), 0);
     }
 
     // returns true if the placeable can be placed at the originPosition (the bottom-left square of the placeable),

@@ -235,8 +235,12 @@ public class Player : MonoBehaviour
                 return;
             }
             mRigidbody2D.velocity = Vector2.zero;
-            GameManager.Instance.TryPlace(placeableToPlace, new Vector3(transform.position.x, groundCheck.position.y - 0.5f, transform.position.z));
-            platformsLeft -= 1;
+            Debug.Log(new Vector3(transform.position.x, groundCheck.position.y - 0.5f, transform.position.z));
+            if (GameManager.Instance.TryPlace(placeableToPlace, new Vector3(transform.position.x, groundCheck.position.y - 0.5f, transform.position.z)))
+            {
+                platformsLeft -= 1;
+                Debug.Log("Placed!");
+            }
         }
     }
 
