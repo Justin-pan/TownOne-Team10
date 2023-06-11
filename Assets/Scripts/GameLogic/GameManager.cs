@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using System.Linq;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -172,6 +173,10 @@ public class GameManager : MonoBehaviour
 
             if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
             {
+                if (points[player] >= PointsBar.MAX_POINTS && winningPlayers.Count == 0)
+                {
+                    SceneManager.LoadScene("EndScene");
+                }
                 winningPlayers.Enqueue(player);
                 player.gameObject.SetActive(false);
             }
