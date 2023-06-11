@@ -30,14 +30,14 @@ public class GameManager : MonoBehaviour
 
     private Dictionary<Player, int> points;
 
-    private Queue<Player> playerPointOrder;
+    private Queue<Player> playerPointOrder; //INVARIANT: Only Contains elements during Trap Drafting Phase
 
     [SerializeField]
-    private List<Player> finishOrder;
+    private List<Player> finishOrder; //INVARIANT: Only Contains elements during Perk Phase
 
-    private Queue<Player> winningPlayers;
+    private Queue<Player> winningPlayers; //INVARIANT: Only Contains elements during Climbing Phase
 
-    private Stack<Player> deadPlayers;
+    private Stack<Player> deadPlayers; //INVARIANT: Only Contains elements during Climbing Phase
 
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
@@ -173,6 +173,11 @@ public class GameManager : MonoBehaviour
 
     public void StartClimbing()
     {
+        foreach (Player p in players)
+        {
+            p.ResetPlayer();
+
+        }
 
     }
 

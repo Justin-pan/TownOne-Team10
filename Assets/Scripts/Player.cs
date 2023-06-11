@@ -125,6 +125,12 @@ public class Player : MonoBehaviour
         perks.Add(p);
     }
 
+    public void ResetPlayer()
+    {
+        isDead = false;
+        stillHurt = false;
+        playerMaxHeight = 0;
+    }
     public PlayerState CurrentState()
     {
         if (m_PlayerController.IsDashing)
