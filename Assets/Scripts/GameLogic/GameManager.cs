@@ -363,18 +363,20 @@ public class GameManager : MonoBehaviour
     {
         Vector3 originPosition = SnapToGamePosition(rawOriginPosition);
 
-        if (!placeable.IsPlacementValid(originPosition, gamePositionPlaceableDic))
-        {
-            return false;
-        }
-
         GameObject newPlacedGameObject = Instantiate(placeable.gameObject);
         Placeable newPlacedPlaceable = newPlacedGameObject.GetComponent<Placeable>();
+
+        if (!newPlacedPlaceable.IsPlacementValid(originPosition, gamePositionPlaceableDic))
+        {
+            Destroy(newPlacedGameObject);
+            return false;
+        }
 
         newPlacedPlaceable.SetOriginPosition(originPosition);
         newPlacedGameObject.transform.parent = placeablesRoot.transform;
         newPlacedGameObject.transform.position = newPlacedPlaceable.GetCenterInWorldCoordinates();
-        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTakenGameCoordinates(originPosition))
+        newPlacedPlaceable.GetSpaceTakenGameCoordinates(originPosition);
+        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTaken())
         {
             gamePositionPlaceableDic.Add(pos, newPlacedPlaceable);
         }

@@ -56,7 +56,6 @@ public class PlayerController : MonoBehaviour
 
     //     HandleMove(Input.GetAxis(inputDirectionPrefix + mPlayer.PlayerID),
     //         Input.GetButtonDown(inputJumpPrefix + mPlayer.PlayerID));
-
     //     HandleDash(Input.GetAxis(inputDirectionPrefix + mPlayer.PlayerID),
     //         Input.GetButton(inputJumpPrefix + mPlayer.PlayerID), Input.GetButtonDown(inputDashPrefix + mPlayer.PlayerID));
     // }
@@ -147,7 +146,6 @@ public class PlayerController : MonoBehaviour
 
     //     mRigidbody2D.velocity = Vector2.zero;
     //     mRigidbody2D.gravityScale = gravityScale;
-
     //     IsDashing = false;
     // }
 }
