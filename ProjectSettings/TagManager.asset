@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Placeable
   layers:
   - Default
   - TransparentFX
@@ -43,4 +44,7 @@ TagManager:
     locked: 0
   - name: Placeable
     uniqueID: 2061803165
+    locked: 0
+  - name: UI Sorting
+    uniqueID: 3237845893
     locked: 0
