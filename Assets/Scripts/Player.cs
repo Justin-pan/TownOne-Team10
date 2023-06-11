@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
 
     private bool isDead = false;
 
+    private bool stillHurt = false;
+
     private void Awake()
     {
         m_PlayerState = PlayerState.Idle;
@@ -42,6 +44,9 @@ public class Player : MonoBehaviour
     {
         // TODO
         m_PlayerState = m_PlayerController.CurrentState();
+        m_PlayerState = (stillHurt) ? PlayerState.Hurt : m_PlayerState;
+        if (currentHealth <= 0)
+            m_PlayerState = PlayerState.Dead;
         switch(m_PlayerState)
         {
             case PlayerState.Idle:
@@ -72,7 +77,13 @@ public class Player : MonoBehaviour
     {
         currentHealth = Mathf.Clamp(currentHealth - hit.Damage, 0, maxHealth);
         mRigidbody2D.AddForce(hit.Knockback);
-        m_PlayerState = PlayerState.Hurt;
+        stillHurt = true;
+        Invoke("KnockBackDelay", 0.3f);
+    }
+
+    private void KnockBackDelay()
+    {
+        stillHurt = false;
     }
 }
 

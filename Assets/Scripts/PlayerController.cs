@@ -67,12 +67,11 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Colliding with anything solid immediately ends the dash.
-        isDashing = false;
-
-        if (collision.gameObject.TryGetComponent(out Player player))
+        if (collision.gameObject.TryGetComponent(out Player player) && isDashing)
         {
             player.OnHit(new Hit(0, currentVelocity.normalized * dashKnockback));
         }
+        isDashing = false;
     }
 
     private void HandleMove(float inputDirection, bool inputJump)
@@ -135,19 +134,19 @@ public class PlayerController : MonoBehaviour
         {
             return PlayerState.Dashing;
         }
-        else if (!isGrounded && currentVelocity.y > 0)
+        else if (!isGrounded && mRigidbody2D.velocity.y > 0)
         {
             return PlayerState.Jumping;
         }
-        else if (!isGrounded && currentVelocity.y <= 0)
+        else if (!isGrounded && mRigidbody2D.velocity.y <= 0)
         {
             return PlayerState.Falling;
         }
-        else if (isGrounded && currentVelocity.x == 0)
+        else if (isGrounded && mRigidbody2D.velocity.x == 0)
         {
             return PlayerState.Idle;
         }
-        else if (isGrounded && currentVelocity.x != 0)
+        else if (isGrounded && mRigidbody2D.velocity.x != 0)
         {
             return PlayerState.Moving;
         }
