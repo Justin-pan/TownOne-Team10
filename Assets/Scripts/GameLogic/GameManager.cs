@@ -122,4 +122,18 @@ public class GameManager : MonoBehaviour
         Vector3 snappedPosition = new Vector3((float)Math.Floor(rawPosition.x), (float)Math.Floor(rawPosition.y), 0);
         return snappedPosition;
     }
+
+    // Getters and Setters ==============================
+
+    public List<Placeable> GetPlacedPlaceables()
+    {
+        return placedPlaceables;
+    }
+
+    public Dictionary<Vector3, Placeable> GetGamePositionPlaceableDic()
+    {
+        return gamePositionPlaceableDic;
+    }
+
+    // EO Getters and Setters ===========================
 }
