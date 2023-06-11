@@ -197,7 +197,7 @@ public class GameManager : MonoBehaviour
         newPlacedGameObject.transform.parent = placeablesRoot.transform;
         newPlacedGameObject.transform.position = newPlacedPlaceable.GetCenterInWorldCoordinates();
         placedPlaceables.Add(newPlacedPlaceable);
-        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTakenGameCoordinates())
+        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTakenGameCoordinates(originPosition))
         {
             gamePositionPlaceableDic.Add(pos, newPlacedPlaceable);
         }

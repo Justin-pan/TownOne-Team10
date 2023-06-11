@@ -20,7 +20,7 @@ public abstract class Placeable : MonoBehaviour
     }
 
     // produces a list containing all the positions (squares) that this placeable takes up, in game coordinates
-    public virtual List<Vector3> GetSpaceTakenGameCoordinates()
+    public virtual List<Vector3> GetSpaceTakenGameCoordinates(Vector3 originPosition)
     {
         List<Vector3> returnVal = new List<Vector3>();
 
@@ -53,7 +53,7 @@ public abstract class Placeable : MonoBehaviour
     {
         foreach (Vector3 pos in gamePositionPlaceableDic.Keys)
         {
-            if (GetSpaceTakenGameCoordinates().Contains(pos))
+            if (GetSpaceTakenGameCoordinates(originPosition).Contains(pos))
             {
                 return false;
             }
