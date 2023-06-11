@@ -111,39 +111,47 @@ public class GameManager : MonoBehaviour
             winningPlayers.Enqueue(player);
         }
 
-        if (finishOrder.Count == players.Count && !roundFinished)
+        if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
             gameState = GameState.POINTS;
 
-            while (winningPlayers.Count != 0)
-            {
-                Player p = winningPlayers.Dequeue();
-                finishOrder.Add(p);
-                points[p] += WINNING_SCORE;
-            }
-
-            while (deadPlayers.Count != 0)
-            {
-                finishOrder.Add(deadPlayers.Pop());
-            }
-
-            foreach (Player p in players)
-            {
-                points[p] += (int) p.PlayerMaxHeight; //Tentative Scoring System
-                
-            }
-
-            List<KeyValuePair<Player, int>> sortedList = points.OrderByDescending(x => x.Value).ToList();
-
-            
-            foreach (KeyValuePair<Player, int> pair in sortedList)
-            {
-                playerPointOrder.Enqueue(pair.Key);
-            }
+            AssignPoints();
+            CalculatePlayerOrder();
 
             gameState = GameState.PERK;
             selection.StartSelection();
-            roundFinished = true;
+        }
+    }
+
+    private void CalculatePlayerOrder()
+    {
+        List<KeyValuePair<Player, int>> sortedList = points.OrderByDescending(x => x.Value).ToList();
+
+
+        foreach (KeyValuePair<Player, int> pair in sortedList)
+        {
+            playerPointOrder.Enqueue(pair.Key);
+        }
+    }
+
+    private void AssignPoints()
+    {
+        while (winningPlayers.Count != 0)
+        {
+            Player p = winningPlayers.Dequeue();
+            finishOrder.Add(p);
+            points[p] += WINNING_SCORE;
+        }
+
+        while (deadPlayers.Count != 0)
+        {
+            finishOrder.Add(deadPlayers.Pop());
+        }
+
+        foreach (Player p in players)
+        {
+            points[p] += (int)p.PlayerMaxHeight; //Tentative Scoring System
+
         }
     }
 
