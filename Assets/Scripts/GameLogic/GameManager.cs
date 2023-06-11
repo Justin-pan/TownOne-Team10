@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
 
     public const int WINNING_SCORE = 15;
-    public const int KILL_PLANE_OFFSET = 1;
+    public const int KILL_PLANE_OFFSET = 2;
 
     private GameState gameState = GameState.CLIMBING;
 
@@ -121,11 +121,26 @@ public class GameManager : MonoBehaviour
         {
          
             deadPlayers.Push(player);
-            
+            //player.OnHit(new Hit(1, Vector2.zero));
+            player.gameObject.SetActive(false);
             Debug.Log("Player " + player.PlayerID + " killed (KILL PLAYER)");
         }
 
-   
+        if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
+        {
+            GameState = GameState.POINTS;
+            AssignPoints();
+            CalculatePlayerOrder();
+
+            GameState = GameState.PERK;
+            selection.StartSelection();
+
+            Vector2 position = spawnPoint.transform.position;
+            position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
+
+            killPlane.transform.position = position;
+            killPlane.enabled = false;
+        }
 
 
 

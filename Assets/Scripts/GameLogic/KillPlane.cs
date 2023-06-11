@@ -15,6 +15,11 @@ public class KillPlane : MonoBehaviour
         {
             GameManager.Instance.KillPlayer(player);
             Debug.Log("Killed player " + player.PlayerID);
+            Debug.Log(GameManager.Instance.WinningPlayers.Count);
+            
+            Debug.Log(GameManager.Instance.DeadPlayers.Count);
+            Debug.Log(GameManager.Instance.FinishOrder.Count);
+
         }
     }
 }
