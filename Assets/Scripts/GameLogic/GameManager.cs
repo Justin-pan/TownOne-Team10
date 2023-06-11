@@ -342,7 +342,7 @@ public class GameManager : MonoBehaviour
 
         //eND OF PERK
         GenerateSelection();
-        placeableCanvas.gameObject.SetActive(true);
+        GameState = GameState.BUILDING;
     }
 
     
