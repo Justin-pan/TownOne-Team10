@@ -163,19 +163,44 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartBuilding()
-    {
-        placeableSelection.StartSelection();
-    }
+    
 
     public void StartClimbing()
     {
-        foreach (Player p in players)
+        if (players.Count == 0)
         {
-            p.ResetPlayer();
-        }
+            spawnPoint.SpawnPlayers();
+        } 
+        else
+        {
+            foreach (Player p in players)
+            {
+                p.ResetPlayer();
+            }
 
-        spawnPoint.RespawnPlayers();
+            spawnPoint.RespawnPlayers();
+        }
+    }
+    private void StartPoints()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void StartPlacing()
+    {
+        throw new NotImplementedException();
+    }
+
+    private void StartPerk()
+    {
+        throw new NotImplementedException();
+    }
+
+    
+
+    public void StartBuilding()
+    {
+        placeableSelection.StartSelection();
     }
 
     // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates
@@ -237,8 +262,31 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Switching to " + value + " from " + gameState);
             gameState = value;
+            switch (gameState)
+            {
+                case GameState.CLIMBING:
+                    StartClimbing();
+                    break;
+                case GameState.POINTS:
+                    StartPoints();
+                    break;
+                case GameState.PERK:
+                    StartPerk();
+                    break;
+                case GameState.BUILDING:
+                    StartBuilding();
+                    break;
+                case GameState.PLACING:
+                    StartPlacing();
+                    break;
+                default:
+                    break;
+
+            }
         } 
     }
+
+    
 
     public List<Perk> Perks
     {
