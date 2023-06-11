@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7905291808935288285}
   - component: {fileID: 7905291808935288282}
+  - component: {fileID: 6816658476482607571}
   m_Layer: 5
   m_Name: PointsBar
   m_TagString: Untagged
@@ -91,6 +92,20 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6816658476482607571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7905291808935288284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdfeade0a9cda8b4797137d4ac0f9777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textBox: {fileID: 7905291809245848527}
+  slider: {fileID: 7905291808935288282}
 --- !u!1 &7905291809237281002
 GameObject:
   m_ObjectHideFlags: 0

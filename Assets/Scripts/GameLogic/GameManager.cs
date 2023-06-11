@@ -9,11 +9,19 @@ public class GameManager : MonoBehaviour
 {
     public static readonly int GAME_WIDTH = 20; 
     public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
-
+    public const float POINTS_SCREEN_DELAY = 10f;
     public const int WINNING_SCORE = 15;
 
 
     private GameState gameState = GameState.CLIMBING;
+
+    [SerializeField]
+    private GameObject pointsBackground;
+
+    [SerializeField]
+    private GameObject pointsBar;
+    [SerializeField]
+    private GameObject pointsCanvas;
 
     [SerializeField]
     private List<Player> players;
@@ -75,6 +83,7 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+        pointsCanvas.gameObject.SetActive(false);
     }
 
     private GameManager()
@@ -87,6 +96,8 @@ public class GameManager : MonoBehaviour
         playerPointOrder = new Queue<Player>();
         points = new Dictionary<Player, int>();
         gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>();
+
+        
     }
 
     public void AddPlayer(Player player)
@@ -123,11 +134,6 @@ public class GameManager : MonoBehaviour
         if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
             GameState = GameState.POINTS;
-            AssignPoints();
-            CalculatePlayerOrder();
-
-            GameState = GameState.PERK;
-            selection.StartSelection();
         }
     }
 
@@ -144,6 +150,7 @@ public class GameManager : MonoBehaviour
 
     private void AssignPoints()
     {
+
         while (winningPlayers.Count != 0)
         {
             Player p = winningPlayers.Dequeue();
@@ -181,9 +188,52 @@ public class GameManager : MonoBehaviour
             spawnPoint.RespawnPlayers();
         }
     }
+
+
     private void StartPoints()
     {
-        throw new NotImplementedException();
+        pointsCanvas.gameObject.SetActive(true);
+
+        for (int i = 0; i < players.Count; ++i)
+        {
+            GameObject pb = Instantiate(pointsBar);
+
+            pb.transform.SetParent(pointsCanvas.transform, false);
+
+            pb.GetComponent<RectTransform>().anchoredPosition = CalculateSpawnPosition(i);
+            PointsBar pointBarObj = pb.GetComponent<PointsBar>();
+            pointBarObj.SetText("Player " + (i + 1));
+
+            AssignPoints();
+            int newPoints = points[players[i]];
+
+            Debug.Log(newPoints);
+
+            pointBarObj.UpdatePoints(newPoints);
+
+        }
+        CalculatePlayerOrder();
+
+        StartCoroutine(WaitForTime());
+    }
+
+    private const int SHIFT = 5;
+
+    private Vector2 CalculateSpawnPosition(int index)
+    {
+        float canvasWidth = pointsBackground.GetComponent<RectTransform>().rect.width;
+        float canvasHeight = pointsBackground.GetComponent<RectTransform>().rect.height;
+
+        // Example: Spacing the point bars evenly vertically
+        float xPosition = (index * SHIFT - 5) * (canvasWidth / (players.Count + 1));
+
+        return new Vector2(xPosition, 0f);
+    }
+
+    public IEnumerator WaitForTime()
+    {
+        yield return new WaitForSeconds(POINTS_SCREEN_DELAY);
+        GameState = GameState.PERK;
     }
 
     private void StartPlacing()
@@ -193,7 +243,7 @@ public class GameManager : MonoBehaviour
 
     private void StartPerk()
     {
-        throw new NotImplementedException();
+        pointsCanvas.gameObject.SetActive(false);
     }
 
     

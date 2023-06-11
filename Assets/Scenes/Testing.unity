@@ -3106,6 +3106,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1375514061}
     m_Modifications:
+    - target: {fileID: 7905291808935288282, guid: b924b52e4a82b1541a159f2ff35c7fd8, type: 3}
+      propertyPath: m_Value
+      value: 0.543
+      objectReference: {fileID: 0}
     - target: {fileID: 7905291808935288284, guid: b924b52e4a82b1541a159f2ff35c7fd8, type: 3}
       propertyPath: m_Name
       value: PointsBar
