@@ -120,7 +120,11 @@ public class GameManager : MonoBehaviour
         if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
         {
             deadPlayers.Push(player);
+            player.gameObject.SetActive(false);
         }
+
+        
+
     }
 
     public void FinishPlayer(Player player)
@@ -149,9 +153,9 @@ public class GameManager : MonoBehaviour
 
             killPlane.transform.position = position;
             killPlane.enabled = false;
-
-            deadPlayers.Clear();
         }
+
+
     }
 
     private void CalculatePlayerOrder()
@@ -189,6 +193,7 @@ public class GameManager : MonoBehaviour
     public void StartBuilding()
     {
         placeableSelection.StartSelection();
+        
     }
 
     public void StartClimbing()
