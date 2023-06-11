@@ -7,8 +7,8 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
-    public static readonly int GAME_WIDTH = 8; 
-    public static readonly int GAME_HEIGHT = 20; // the width and height of the region in which placeables can be placed, in game units
+    public static readonly int GAME_WIDTH = 20; 
+    public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
 
     public const int WINNING_SCORE = 15;
 
@@ -195,7 +195,6 @@ public class GameManager : MonoBehaviour
         newPlacedPlaceable.SetOriginPosition(originPosition);
         newPlacedGameObject.transform.parent = placeablesRoot.transform;
         newPlacedGameObject.transform.position = newPlacedPlaceable.GetCenterInWorldCoordinates();
-        placedPlaceables.Add(newPlacedPlaceable);
         foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTakenGameCoordinates(originPosition))
         {
             gamePositionPlaceableDic.Add(pos, newPlacedPlaceable);
