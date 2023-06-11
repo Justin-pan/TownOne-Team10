@@ -4,6 +4,17 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
+    private bool roundFinished = false;
+
+    private GameState gameState = GameState.CLIMBING;
+
+    public GameState GameState
+    {
+        get => gameState;
+        set => gameState = value;
+    }
+
     [SerializeField]
     private List<Player> players;
 
@@ -11,6 +22,19 @@ public class GameManager : MonoBehaviour
     {
         get => players;
     }
+
+    [SerializeField]
+    private List<Perk> perks;
+
+    public List<Perk> Perks
+    {
+        get => perks;
+    }
+
+    [SerializeField]
+    private Selection selection;
+
+
 
     [SerializeField]
     private List<Player> finishOrder;
@@ -57,6 +81,11 @@ public class GameManager : MonoBehaviour
         players.Add(player);
     }
 
+    public void AddPerk(Perk perk)
+    {
+        perks.Add(perk);
+    }
+
     public void FinishPlayer(Player player)
     {
         if (!finishOrder.Contains(player))
@@ -65,9 +94,11 @@ public class GameManager : MonoBehaviour
             finishOrder.Add(player);
         }
 
-        if (finishOrder.Count == players.Count)
+        if (finishOrder.Count == players.Count && !roundFinished)
         {
-            Debug.Log("All players finished");
+            gameState = GameState.PERK;
+            selection.StartSelection();
+            roundFinished = true;
         }
     }
 }
