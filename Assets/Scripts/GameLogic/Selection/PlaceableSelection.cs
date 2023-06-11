@@ -10,7 +10,6 @@ public class PlaceableSelection : MonoBehaviour
     private HashSet<Placeable> p;
     private float position = 0f;
     private float shift;
-    private float offset = 0f;
 
 
     [SerializeField]

@@ -8,4 +8,5 @@ public enum GameState
     POINTS,
     PERK,
     BUILDING,
+    PLACING,
 }

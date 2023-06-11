@@ -17,7 +17,6 @@ public class Clicker : MonoBehaviour
         if (GameManager.Instance.FinishOrder.Count == 0 && GameManager.Instance.GameState == GameState.PERK)
         {
             GameManager.Instance.GameState = GameState.BUILDING;
-            UnityEngine.Debug.Log("Moving to building");
             GameManager.Instance.StartBuilding();
         }
 
@@ -36,9 +35,7 @@ public class Clicker : MonoBehaviour
 
     public void DisplayImage()
     {
-
         GetComponent<SpriteRenderer>().sprite = displayPerk.sprite;
-
     }
 
     public Perk DisplayPerk

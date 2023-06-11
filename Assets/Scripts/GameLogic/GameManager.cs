@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
 
     public const int WINNING_SCORE = 15;
 
-    private bool roundFinished = false;
 
     private GameState gameState = GameState.CLIMBING;
 
@@ -123,11 +122,11 @@ public class GameManager : MonoBehaviour
 
         if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
-            gameState = GameState.POINTS;
+            GameState = GameState.POINTS;
             AssignPoints();
             CalculatePlayerOrder();
 
-            gameState = GameState.PERK;
+            GameState = GameState.PERK;
             selection.StartSelection();
         }
     }
@@ -234,7 +233,11 @@ public class GameManager : MonoBehaviour
     public GameState GameState
     {
         get => gameState;
-        set => gameState = value;
+        set 
+        {
+            Debug.Log("Switching to " + value + " from " + gameState);
+            gameState = value;
+        } 
     }
 
     public List<Perk> Perks
