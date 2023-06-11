@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     public static readonly int GAME_WIDTH = 8; 
     public static readonly int GAME_HEIGHT = 20; // the width and height of the region in which placeables can be placed, in game units
 
+    public const int WINNING_SCORE = 15;
+
     private bool roundFinished = false;
 
     private GameState gameState = GameState.CLIMBING;
@@ -111,9 +113,13 @@ public class GameManager : MonoBehaviour
 
         if (finishOrder.Count == players.Count && !roundFinished)
         {
+            gameState = GameState.POINTS;
+
             while (winningPlayers.Count != 0)
             {
-                finishOrder.Add(winningPlayers.Dequeue());
+                Player p = winningPlayers.Dequeue();
+                finishOrder.Add(p);
+                points[p] += WINNING_SCORE;
             }
 
             while (deadPlayers.Count != 0)
@@ -123,7 +129,7 @@ public class GameManager : MonoBehaviour
 
             foreach (Player p in players)
             {
-                points[p] += (int) p.PlayerMaxHeight;
+                points[p] += (int) p.PlayerMaxHeight; //Tentative Scoring System
                 
             }
 
