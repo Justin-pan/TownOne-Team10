@@ -98,6 +98,7 @@ public class Player : MonoBehaviour
     public void AddPerk(Perk p)
     {
         perks.Add(p);
+        p.ApplyEffect(this);
     }
 
     public PlayerState CurrentState()
