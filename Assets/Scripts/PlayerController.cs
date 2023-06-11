@@ -34,11 +34,13 @@ public class PlayerController : MonoBehaviour
     private Player mPlayer;
 
     private Vector2 currentVelocity;
+    private bool facingRight;
 
     private void Awake()
     {
         mRigidbody2D = GetComponent<Rigidbody2D>();
         mPlayer = GetComponent<Player>();
+        facingRight = false;
 
         currentVelocity = Vector2.zero;
         IsGrounded = IsDashReady = IsDashing = false;
@@ -82,8 +84,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Flip()
+    {
+        facingRight = !facingRight;
+
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
+    }
+
     private void HandleMove(float inputDirection, bool inputJump)
     {
+        if (inputDirection > 0 && !facingRight)
+            Flip();
+        else if (inputDirection < 0 && facingRight)
+            Flip();
         Vector3 target = mRigidbody2D.velocity;
         target.x = inputDirection * moveSpeed;
 
