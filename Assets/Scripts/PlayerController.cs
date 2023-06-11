@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     [Header("Other Options")]
     [SerializeField] private Placeable blockToPlace;
 
+    private int platformsLeft = 1;
+
     public bool IsGrounded { get; set; }
     public bool IsDashReady { get; set; }
     public bool IsDashing { get; set; }
@@ -71,7 +73,12 @@ public class PlayerController : MonoBehaviour
     {
         if (buttonDown)
         {
+            if (platformsLeft <=0)
+            {
+                return;
+            }
             GameManager.Instance.TryPlace(blockToPlace, new Vector3(mPlayer.transform.position.x, mPlayer.transform.position.y - 1f, mPlayer.transform.position.z));
+            platformsLeft -= 1;
         }
     }
 
@@ -163,5 +170,10 @@ public class PlayerController : MonoBehaviour
         mRigidbody2D.gravityScale = gravityScale;
 
         IsDashing = false;
+    }
+
+    public void SetPlatformsLeft(int i)
+    {
+        platformsLeft = i;
     }
 }
