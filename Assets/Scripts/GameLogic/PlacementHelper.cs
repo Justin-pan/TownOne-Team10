@@ -7,8 +7,6 @@ public class PlacementHelper : MonoBehaviour
 {
     [SerializeField]
     private Camera mainCamera;
-    [SerializeField]
-    private Placeable testPlaceable; // FOR TESTING PURPOSES; REMOVE LATER
 
     public static PlacementHelper Instance { get; private set; }
 
@@ -30,7 +28,6 @@ public class PlacementHelper : MonoBehaviour
             Instance = this;
         }
 
-        PlacePlaceable(testPlaceable);
     }
 
     private void Update()

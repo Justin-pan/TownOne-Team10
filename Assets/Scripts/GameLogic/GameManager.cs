@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Selection selection;
 
+    [SerializeField]
+    private PlaceableSelection placeableSelection;
+
 
 
     [SerializeField]
@@ -51,8 +54,15 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
 
-    private List<Placeable> placedPlaceables = new List<Placeable>();
-    private Dictionary<Vector3, Placeable> gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>(); 
+    [SerializeField]
+    private List<Placeable> placedPlaceables;
+
+    public List<Placeable> PlacedPlaceables
+    {
+        get => placedPlaceables;
+        set => placedPlaceables = value;
+    }
+    private Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
                                                                       // Keys: positions at which a placeable exists
                                                                       // Values: the placeable at that location
 
@@ -86,6 +96,8 @@ public class GameManager : MonoBehaviour
     {
         players = new List<Player>();
         finishOrder = new List<Player>();
+        placedPlaceables = new List<Placeable>();
+        gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>();
     }
 
     public void AddPlayer(Player player)
@@ -112,6 +124,11 @@ public class GameManager : MonoBehaviour
             selection.StartSelection();
             roundFinished = true;
         }
+    }
+
+    public void StartBuilding()
+    {
+        placeableSelection.StartSelection();
     }
 
     // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates

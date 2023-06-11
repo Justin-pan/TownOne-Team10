@@ -7,9 +7,9 @@ public class Perk : MonoBehaviour
     protected string title;
     protected string description;
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    protected virtual void Start()
+    { 
+        GameManager.Instance.AddPerk(this);
     }
 
     // Update is called once per frame
