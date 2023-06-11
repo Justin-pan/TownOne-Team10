@@ -7,13 +7,6 @@ public class Clicker : MonoBehaviour
 
     private Perk displayPerk;
 
-    [SerializeField]
-    private Sprite SlowFallSprite;
-    [SerializeField]
-    private Sprite ExtraPointsSprite;
-    [SerializeField]
-    private Sprite BiggerDashSprite;
-
     private void OnMouseDown()
     {
         Player player = GameManager.Instance.FinishOrder[0];
@@ -43,6 +36,7 @@ public class Clicker : MonoBehaviour
 
     public void DisplayImage()
     {
+<<<<<<< Updated upstream
         string perkName = displayPerk.title;
         Debug.Log("got to swtich case");
         switch (perkName)
@@ -61,6 +55,9 @@ public class Clicker : MonoBehaviour
                 break;
             
         }
+=======
+        GetComponent<SpriteRenderer>().sprite = displayPerk.sprite;
+>>>>>>> Stashed changes
     }
 
     public Perk DisplayPerk

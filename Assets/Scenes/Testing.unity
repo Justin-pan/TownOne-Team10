@@ -167,6 +167,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cc88abb84ce94c87b6dfaca3861916f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
+=======
+  title: 
+  sprite: {fileID: 21300000, guid: 95d3cc33500ce4c4cabaaf95d82abd60, type: 3}
+>>>>>>> Stashed changes
 --- !u!1001 &69188118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2553,6 +2558,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b62491ccb0041402da7606fb7aa3df6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
+=======
+  title: 
+  sprite: {fileID: 21300000, guid: da32cf81139554f288ab9ca79704d382, type: 3}
+>>>>>>> Stashed changes
 --- !u!1 &1682445037
 GameObject:
   m_ObjectHideFlags: 0
@@ -2597,6 +2607,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfa4ef23e2e5743478670c7ba6dbbecc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< Updated upstream
+=======
+  title: 
+  sprite: {fileID: 21300000, guid: 4c9be5299a9a349a98d756592bda286f, type: 3}
+>>>>>>> Stashed changes
 --- !u!1001 &1728701472
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2998,7 +3013,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clicker: {fileID: 9052059756695791145, guid: 413a33122c80947df81d99025ad468d3, type: 3}
-  transform: {fileID: 2043880525}
   rectTransform: {fileID: 173219636}
 --- !u!1001 &2096954047
 PrefabInstance:
