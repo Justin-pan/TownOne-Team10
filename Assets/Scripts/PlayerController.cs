@@ -5,6 +5,10 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [Header("Technical")]
+    [SerializeField] private string inputDirectionPrefix;
+    [SerializeField] private string inputJumpPrefix;
+    [SerializeField] private string inputDashPrefix;
+
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius;
 
@@ -27,12 +31,14 @@ public class PlayerController : MonoBehaviour
 
     // [Components]
     private Rigidbody2D mRigidbody2D;
+    private Player mPlayer;
 
     private Vector2 currentVelocity;
 
     private void Awake()
     {
         mRigidbody2D = GetComponent<Rigidbody2D>();
+        mPlayer = GetComponent<Player>();
 
         currentVelocity = Vector2.zero;
         IsGrounded = IsDashReady = IsDashing = false;
@@ -46,8 +52,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        HandleMove(Input.GetAxis("Horizontal"), Input.GetButtonDown("Jump"));
-        HandleDash(Input.GetAxis("Horizontal"), Input.GetButton("Jump"), Input.GetButtonDown("Dash"));
+        HandleMove(Input.GetAxis(inputDirectionPrefix + mPlayer.PlayerID),
+            Input.GetButtonDown(inputJumpPrefix + mPlayer.PlayerID));
+
+        HandleDash(Input.GetAxis(inputDirectionPrefix + mPlayer.PlayerID),
+            Input.GetButton(inputJumpPrefix + mPlayer.PlayerID), Input.GetButtonDown(inputDashPrefix + mPlayer.PlayerID));
     }
 
     private void FixedUpdate()
@@ -66,12 +75,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Colliding with anything solid immediately ends the dash.
-        IsDashing = false;
-
-        if (collision.gameObject.TryGetComponent(out Player player))
+        if (IsDashing && collision.gameObject.TryGetComponent(out Player player))
         {
-            player.OnHit(new Hit(0, currentVelocity.normalized * dashKnockback));
+            player.OnHit(new Hit(0, mRigidbody2D.velocity * dashKnockback));
+            IsDashing = false;
         }
     }
 
