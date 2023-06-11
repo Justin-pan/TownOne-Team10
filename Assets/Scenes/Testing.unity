@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: 
+  sprite: {fileID: 21300000, guid: 9aa77b3935128cc4b8881bc8fe48de2b, type: 3}
 --- !u!1001 &69188118
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2206,6 +2207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: 
+  sprite: {fileID: 21300000, guid: 9aa77b3935128cc4b8881bc8fe48de2b, type: 3}
 --- !u!1 &1682445037
 GameObject:
   m_ObjectHideFlags: 0
@@ -2251,6 +2253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: 
+  sprite: {fileID: 21300000, guid: 9aa77b3935128cc4b8881bc8fe48de2b, type: 3}
 --- !u!1001 &1728701472
 PrefabInstance:
   m_ObjectHideFlags: 0
