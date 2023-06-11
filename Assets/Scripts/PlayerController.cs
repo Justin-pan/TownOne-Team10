@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private string inputDirectionPrefix;
     [SerializeField] private string inputJumpPrefix;
     [SerializeField] private string inputDashPrefix;
+    [SerializeField] private string inputPlacePrefix;
 
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius;
@@ -24,6 +25,9 @@ public class PlayerController : MonoBehaviour
 
     [Range(0, 1)][SerializeField] public float traction;
     [Range(0, 1)][SerializeField] public float airTraction;
+
+    [Header("Other Options")]
+    [SerializeField] private Placeable blockToPlace;
 
     public bool IsGrounded { get; set; }
     public bool IsDashReady { get; set; }
@@ -57,6 +61,16 @@ public class PlayerController : MonoBehaviour
 
         HandleDash(Input.GetAxis(inputDirectionPrefix + mPlayer.PlayerID),
             Input.GetButton(inputJumpPrefix + mPlayer.PlayerID), Input.GetButtonDown(inputDashPrefix + mPlayer.PlayerID));
+
+        HandlePlace(Input.GetButtonDown(inputPlacePrefix + mPlayer.PlayerID));
+    }
+
+    private void HandlePlace(bool buttonDown)
+    {
+        if (buttonDown)
+        {
+            GameManager.Instance.TryPlace(blockToPlace, new Vector3(mPlayer.transform.position.x, mPlayer.transform.position.y - 1f, mPlayer.transform.position.z));
+        }
     }
 
     private void FixedUpdate()
