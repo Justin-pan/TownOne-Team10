@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -48,6 +49,13 @@ public class GameManager : MonoBehaviour
         get => points;
     }
 
+    private Queue<Player> playerPointOrder;
+
+    public Queue<Player> PlayerPointOrder
+    {
+        get => playerPointOrder;
+    }
+
     [SerializeField]
     private List<Player> finishOrder;
 
@@ -58,7 +66,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
-
+    
     [SerializeField]
     private List<Placeable> placedPlaceables;
 
@@ -102,6 +110,8 @@ public class GameManager : MonoBehaviour
         players = new List<Player>();
         finishOrder = new List<Player>();
         placedPlaceables = new List<Placeable>();
+        playerPointOrder = new Queue<Player>();
+        points = new Dictionary<Player, int>();
         gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>();
     }
 
@@ -126,6 +136,14 @@ public class GameManager : MonoBehaviour
 
         if (finishOrder.Count == players.Count && !roundFinished)
         {
+            List<KeyValuePair<Player, int>> sortedList = points.OrderByDescending(x => x.Value).ToList();
+
+            
+            foreach (KeyValuePair<Player, int> pair in sortedList)
+            {
+                playerPointOrder.Enqueue(pair.Key);
+            }
+
             gameState = GameState.PERK;
             selection.StartSelection();
             roundFinished = true;
@@ -135,6 +153,11 @@ public class GameManager : MonoBehaviour
     public void StartBuilding()
     {
         placeableSelection.StartSelection();
+    }
+
+    public void StartClimbing()
+    {
+
     }
 
     // Attempts to place the given placeable with its bottom-left square at the originPosition given in game coordinates

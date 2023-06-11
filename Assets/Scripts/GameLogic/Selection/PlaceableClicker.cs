@@ -19,8 +19,17 @@ public class PlaceableClicker : MonoBehaviour
     }
     private void OnMouseDown()
     {
+        Player placingPlayer = GameManager.Instance.PlayerPointOrder.Dequeue();
+        Debug.Log("Player " + placingPlayer.PlayerID + " is placing");
         PlacementHelper.Instance.PlacePlaceable(displayPlaceable);
         Destroy(gameObject);
+
+        if (GameManager.Instance.PlayerPointOrder.Count == 0)
+        {
+            GameManager.Instance.GameState = GameState.CLIMBING;
+            UnityEngine.Debug.Log("Moving to climbing");
+            GameManager.Instance.StartClimbing();
+        }
     }
 
     private void OnMouseOver()
