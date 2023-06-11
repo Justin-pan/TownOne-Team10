@@ -60,6 +60,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7d43e674d4b44be695accfd24d116d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SlowFallSprite: {fileID: 21300000, guid: 4c9be5299a9a349a98d756592bda286f, type: 3}
+  ExtraPointsSprite: {fileID: 21300000, guid: 95d3cc33500ce4c4cabaaf95d82abd60, type: 3}
+  BiggerDashSprite: {fileID: 21300000, guid: da32cf81139554f288ab9ca79704d382, type: 3}
 --- !u!212 &1088218801257661764
 SpriteRenderer:
   m_ObjectHideFlags: 0
