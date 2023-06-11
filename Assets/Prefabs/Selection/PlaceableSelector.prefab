@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7287184774610687883}
   - component: {fileID: 1490752443057446715}
-  - component: {fileID: 9052059756695791145}
   - component: {fileID: 1088218801257661764}
   - component: {fileID: 4611653651811572426}
+  - component: {fileID: 7261868002906860201}
   m_Layer: 5
-  m_Name: PerkSelector
+  m_Name: PlaceableSelector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,18 +48,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7836521369370591989}
   m_CullTransparentMesh: 1
---- !u!114 &9052059756695791145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7836521369370591989}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f7d43e674d4b44be695accfd24d116d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &1088218801257661764
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -138,3 +126,15 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &7261868002906860201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7836521369370591989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2edc6f7fa1da34849ae314b681742ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
