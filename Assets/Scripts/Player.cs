@@ -37,6 +37,8 @@ public class Player : MonoBehaviour
 
     private PlayerController m_PlayerController;
 
+    private SpriteRenderer m_SpriteRenderer;
+
     private Animator m_CurrentAnimation;
 
     private int currentHealth;
@@ -57,6 +59,7 @@ public class Player : MonoBehaviour
         mRigidbody2D = GetComponent<Rigidbody2D>();
         m_PlayerController = GetComponent<PlayerController>();
         m_Animator = GetComponent<Animator>();
+        m_SpriteRenderer = GetComponent<SpriteRenderer>();
 
         mRigidbody2D = GetComponent<Rigidbody2D>();
 
@@ -69,6 +72,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         GameManager.Instance.AddPlayer(this);
+        m_SpriteRenderer.size *= 4.0f;
     }
 
     public void Update()
