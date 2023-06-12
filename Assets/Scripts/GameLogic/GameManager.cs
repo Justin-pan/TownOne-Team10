@@ -305,7 +305,7 @@ public class GameManager : MonoBehaviour
         perksCanvas.gameObject.SetActive(false);
         placeableCanvas.gameObject.SetActive(true);
 
-        SetPlaceableText(players.Count - PlayerPointOrder.Count + 1);
+        SetPlaceableText(PlayerPointOrder.Peek().PlayerID + 1);
         while (trapDraft.Count != 0)
         {
             Placeable placeable = trapDraft.Dequeue();
@@ -368,7 +368,7 @@ public class GameManager : MonoBehaviour
         pointsCanvas.gameObject.SetActive(false);
         perksCanvas.gameObject.SetActive(true);
 
-        SetPerkText(players.Count - PlayerPointOrder.Count + 1);
+        SetPerkText(FinishOrder[0].PlayerID + 1);
 
         while (perkDraft.Count != 0)
         {
