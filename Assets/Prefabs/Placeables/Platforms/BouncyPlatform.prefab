@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7773293719697273220}
   - component: {fileID: 7773293719697273223}
   - component: {fileID: 2616102905491998024}
+  - component: {fileID: -2698610434564326653}
   m_Layer: 0
   m_Name: BouncyPlatform
   m_TagString: Untagged
@@ -140,3 +141,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f06b3704867e98541ba22f6ac7117830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-2698610434564326653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8886551678565821946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616b8fdbbd0d17244891a0d054b35e42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lowSprite: {fileID: 0}
+  midSprite: {fileID: 0}
+  highSprite: {fileID: 0}
+  low: 8
+  mid: 19

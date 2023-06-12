@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4656737745696555934}
   - component: {fileID: 5870079845063152658}
   - component: {fileID: -2258337167455642153}
+  - component: {fileID: -7503998548122132082}
   m_Layer: 0
   m_Name: BasicPlatform
   m_TagString: Placeable
@@ -124,3 +125,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f06b3704867e98541ba22f6ac7117830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-7503998548122132082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4739370498237843564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 616b8fdbbd0d17244891a0d054b35e42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lowSprite: {fileID: 21300000, guid: 62ce01ddca719d34ea9648c586a7cc94, type: 3}
+  midSprite: {fileID: 21300000, guid: e92fc44f12c21dd44a49e390f39f7ffd, type: 3}
+  highSprite: {fileID: 21300000, guid: ff00345da0563d641903c5bd5bb748a4, type: 3}
+  low: 8
+  mid: 19
