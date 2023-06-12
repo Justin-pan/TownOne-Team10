@@ -387,7 +387,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: 
-  sprite: {fileID: 21300000, guid: 17dd981d501584129ab60505fea0b46b, type: 3}
+  sprite: {fileID: 21300000, guid: 5c0ea2f587e044602860da165c3f8707, type: 3}
 --- !u!1001 &95037816
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -555,15 +555,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7287184774610687883, guid: 413a33122c80947df81d99025ad468d3, type: 3}
       propertyPath: m_LocalScale.x
-      value: 51.96436
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7287184774610687883, guid: 413a33122c80947df81d99025ad468d3, type: 3}
       propertyPath: m_LocalScale.y
-      value: 51.96436
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7287184774610687883, guid: 413a33122c80947df81d99025ad468d3, type: 3}
       propertyPath: m_LocalScale.z
-      value: 51.96436
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7287184774610687883, guid: 413a33122c80947df81d99025ad468d3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3527,7 +3527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: 
-  sprite: {fileID: 21300000, guid: 17dd981d501584129ab60505fea0b46b, type: 3}
+  sprite: {fileID: 21300000, guid: 77b8c8ed1362848929a6ed0271c1a186, type: 3}
 --- !u!1 &1682445037
 GameObject:
   m_ObjectHideFlags: 0
@@ -3730,7 +3730,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1820552165}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.14914513, y: -1.9816971, z: 90.6438}
+  m_LocalPosition: {x: -4.93, y: -9.42, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
