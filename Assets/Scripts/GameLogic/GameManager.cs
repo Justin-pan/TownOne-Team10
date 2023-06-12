@@ -323,12 +323,12 @@ public class GameManager : MonoBehaviour
 
     public void SetPlaceableText(int i)
     {
-        placeableText.text = "Player " + i + " is placing";
+        placeableText.text = "P" + i + " is placing...";
     }
 
     public void SetPerkText(int i)
     {
-        perksText.text = "Player " + i + " is selecting";
+        perksText.text = "P" + i + " is selecting...";
     }
 
     private Vector2 CalculatePlaceableSpawnPosition(int index)
