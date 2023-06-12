@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public static readonly int GAME_WIDTH = 20;
     public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
     public const float POINTS_SCREEN_DELAY = 3f;
-    public const int WINNING_SCORE = 15;
+    public const int WINNING_SCORE = 30;
 
     public const int KILL_PLANE_OFFSET = 2;
 
@@ -62,12 +62,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private SpawnPoint spawnPoint;
-    private readonly Queue<Player> playerPointOrder; //INVARIANT: Only Contains elements during Trap Drafting Phase
+    private Queue<Player> playerPointOrder; //INVARIANT: Only Contains elements during Trap Drafting Phase
 
     [SerializeField]
     private List<Player> finishOrder; //INVARIANT: Only Contains elements during Perk Phase
 
-    private readonly Stack<Player> deadPlayers; //INVARIANT: Only Contains elements during Climbing Phase
+    private Stack<Player> deadPlayers; //INVARIANT: Only Contains elements during Climbing Phase
 
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
@@ -75,10 +75,10 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private List<Placeable> placedPlaceables;
 
-    private readonly Queue<Placeable> trapDraft;
-    private readonly Queue<Perk> perkDraft;
+    private Queue<Placeable> trapDraft;
+    private Queue<Perk> perkDraft;
 
-    private readonly Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
+    private  Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
     // Keys: positions at which a placeable exists
     // Values: the placeable at that location
 
@@ -254,7 +254,7 @@ public class GameManager : MonoBehaviour
     private void StartPoints()
     {
         pointsCanvas.gameObject.SetActive(true);
-
+        AssignPoints();
         for (int i = 0; i < players.Count; ++i)
         {
             GameObject pb = Instantiate(pointsBar);
@@ -265,7 +265,7 @@ public class GameManager : MonoBehaviour
             PointsBar pointBarObj = pb.GetComponent<PointsBar>();
             pointBarObj.SetText("Player " + (i + 1));
 
-            AssignPoints();
+            
             int newPoints = Points[players[i]];
 
             Debug.Log(newPoints);
