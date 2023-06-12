@@ -126,12 +126,10 @@ public class Player : MonoBehaviour
             case PlayerState.Idle:
                 m_Animator.SetBool("Idle", true);
                 m_Animator.SetBool("Moving", false);
-                m_Animator.ResetTrigger("Dash");
                 break;
             case PlayerState.Moving:
                 m_Animator.SetBool("Idle", false);
                 m_Animator.SetBool("Moving", true);
-                m_Animator.ResetTrigger("Dash");
                 break;
             case PlayerState.Jumping:
                 break;
