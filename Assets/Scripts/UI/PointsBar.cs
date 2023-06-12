@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 public class PointsBar : MonoBehaviour
 {
-    public const int MAX_POINTS = 100;
+    public const int MAX_POINTS = 300;
     public const float POINTS_SPEED = 2f;
     [SerializeField]
     private TextMeshProUGUI textBox;

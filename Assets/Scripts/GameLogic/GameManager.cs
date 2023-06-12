@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     public static readonly int GAME_WIDTH = 20; 
     public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
     public const float POINTS_SCREEN_DELAY = 3f;
-    public const int WINNING_SCORE = 15;
+    public const int WINNING_SCORE = 30;
 
     public const int KILL_PLANE_OFFSET = 2;
 
@@ -63,7 +63,8 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private SpawnPoint spawnPoint;
 
-    private Dictionary<Player, int> points;
+    [SerializeField]
+    public Dictionary<Player, int> points;
 
     private Queue<Player> playerPointOrder; //INVARIANT: Only Contains elements during Trap Drafting Phase
 
@@ -230,7 +231,8 @@ public class GameManager : MonoBehaviour
         foreach (Player p in players)
         {
             points[p] += (int)p.PlayerMaxHeight; //Tentative Scoring System
-
+            Debug.Log("Max Height" + p.PlayerMaxHeight);
+            Debug.Log("Running Once" + players.Count);
         }
     }
 
@@ -260,6 +262,8 @@ public class GameManager : MonoBehaviour
     {
         pointsCanvas.gameObject.SetActive(true);
 
+        AssignPoints();
+        
         for (int i = 0; i < players.Count; ++i)
         {
             GameObject pb = Instantiate(pointsBar);
@@ -269,8 +273,6 @@ public class GameManager : MonoBehaviour
             pb.GetComponent<RectTransform>().anchoredPosition = CalculateSpawnPosition(i);
             PointsBar pointBarObj = pb.GetComponent<PointsBar>();
             pointBarObj.SetText("Player " + (i + 1));
-
-            AssignPoints();
             int newPoints = points[players[i]];
 
             Debug.Log(newPoints);
@@ -379,7 +381,6 @@ public class GameManager : MonoBehaviour
             Perk perk = perkDraft.Dequeue();
 
             GameObject c = Instantiate(perksPrefab);
-            Debug.Log("Instantiating");
             c.transform.SetParent(perksCanvas.transform, false);
 
             c.GetComponent<RectTransform>().anchoredPosition = CalculatePlaceableSpawnPosition(players.Count - perkDraft.Count);
