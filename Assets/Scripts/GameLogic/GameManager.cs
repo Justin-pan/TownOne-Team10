@@ -1,15 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
-using UnityEngine;
 using System.Linq;
 using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public static readonly int GAME_WIDTH = 20; 
+    public static readonly int GAME_WIDTH = 20;
     public static readonly int GAME_HEIGHT = 50; // the width and height of the region in which placeables can be placed, in game units
     public const float POINTS_SCREEN_DELAY = 3f;
     public const int WINNING_SCORE = 15;
@@ -29,6 +28,13 @@ public class GameManager : MonoBehaviour
     private GameObject pointsBar;
     [SerializeField]
     private GameObject pointsCanvas;
+
+    [SerializeField]
+    private GameObject perksCanvas;
+    [SerializeField]
+    private GameObject perksPrefab;
+    [SerializeField]
+    private TextMeshProUGUI perksText;
 
     [SerializeField]
     private GameObject placeableBackground;
@@ -56,29 +62,25 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private SpawnPoint spawnPoint;
-
-    private Dictionary<Player, int> points;
-
-    private Queue<Player> playerPointOrder; //INVARIANT: Only Contains elements during Trap Drafting Phase
+    private readonly Queue<Player> playerPointOrder; //INVARIANT: Only Contains elements during Trap Drafting Phase
 
     [SerializeField]
     private List<Player> finishOrder; //INVARIANT: Only Contains elements during Perk Phase
 
-    private Queue<Player> winningPlayers; //INVARIANT: Only Contains elements during Climbing Phase
-
-    private Stack<Player> deadPlayers; //INVARIANT: Only Contains elements during Climbing Phase
+    private readonly Stack<Player> deadPlayers; //INVARIANT: Only Contains elements during Climbing Phase
 
     [SerializeField]
     private GameObject placeablesRoot; // the root object which is to parent all placeables in the scene
-    
+
     [SerializeField]
     private List<Placeable> placedPlaceables;
 
-    private Queue<Placeable> trapDraft;
+    private readonly Queue<Placeable> trapDraft;
+    private readonly Queue<Perk> perkDraft;
 
-    private Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
-                                                                      // Keys: positions at which a placeable exists
-                                                                      // Values: the placeable at that location
+    private readonly Dictionary<Vector3, Placeable> gamePositionPlaceableDic;
+    // Keys: positions at which a placeable exists
+    // Values: the placeable at that location
 
     private static GameManager instance = null;
 
@@ -88,7 +90,7 @@ public class GameManager : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = new GameManager(); 
+                instance = new GameManager();
             }
             return instance;
         }
@@ -106,6 +108,7 @@ public class GameManager : MonoBehaviour
         }
         pointsCanvas.gameObject.SetActive(false);
         placeableCanvas.gameObject.SetActive(false);
+        perksCanvas.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -113,7 +116,7 @@ public class GameManager : MonoBehaviour
         killPlane.transform.localScale = new Vector3(GAME_WIDTH * 2, GAME_HEIGHT, 1);
 
         Vector2 position = spawnPoint.transform.position;
-        position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
+        position.y -= (GAME_HEIGHT / 2) + KILL_PLANE_OFFSET;
 
         killPlane.transform.position = position;
         killPlane.enabled = true;
@@ -123,14 +126,14 @@ public class GameManager : MonoBehaviour
     {
         players = new List<Player>();
         finishOrder = new List<Player>();
-        winningPlayers = new Queue<Player>();
+        WinningPlayers = new Queue<Player>();
         deadPlayers = new Stack<Player>();
         placedPlaceables = new List<Placeable>();
         playerPointOrder = new Queue<Player>();
-        points = new Dictionary<Player, int>();
+        Points = new Dictionary<Player, int>();
         gamePositionPlaceableDic = new Dictionary<Vector3, Placeable>();
         trapDraft = new Queue<Placeable>();
-
+        perkDraft = new Queue<Perk>();
 
 
     }
@@ -148,17 +151,17 @@ public class GameManager : MonoBehaviour
 
     public void KillPlayer(Player player)
     {
-        if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
+        if (!WinningPlayers.Contains(player) && !deadPlayers.Contains(player))
         {
             deadPlayers.Push(player); player.gameObject.SetActive(false);
             Debug.Log("Player " + player.PlayerID + " killed (KILL PLAYER)");
         }
 
-        if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
+        if ((deadPlayers.Count + WinningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
             GameState = GameState.POINTS;
             Vector2 position = spawnPoint.transform.position;
-            position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
+            position.y -= (GAME_HEIGHT / 2) + KILL_PLANE_OFFSET;
 
             killPlane.transform.position = position;
             killPlane.enabled = false;
@@ -171,22 +174,22 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Player " + player.PlayerID + " finished");
 
-            if (!winningPlayers.Contains(player) && !deadPlayers.Contains(player))
+            if (!WinningPlayers.Contains(player) && !deadPlayers.Contains(player))
             {
-                if (points[player] >= PointsBar.MAX_POINTS && winningPlayers.Count == 0)
+                if (Points[player] >= PointsBar.MAX_POINTS && WinningPlayers.Count == 0)
                 {
                     SceneManager.LoadScene("EndScene");
                 }
-                winningPlayers.Enqueue(player);
+                WinningPlayers.Enqueue(player);
                 player.gameObject.SetActive(false);
             }
         }
 
-        if ((deadPlayers.Count + winningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
+        if ((deadPlayers.Count + WinningPlayers.Count) == players.Count && gameState == GameState.CLIMBING)
         {
             GameState = GameState.POINTS;
             Vector2 position = spawnPoint.transform.position;
-            position.y -= GAME_HEIGHT / 2 + KILL_PLANE_OFFSET;
+            position.y -= (GAME_HEIGHT / 2) + KILL_PLANE_OFFSET;
 
             killPlane.transform.position = position;
             killPlane.enabled = false;
@@ -195,7 +198,7 @@ public class GameManager : MonoBehaviour
 
     private void CalculatePlayerOrder()
     {
-        List<KeyValuePair<Player, int>> sortedList = points.OrderByDescending(x => x.Value).ToList();
+        List<KeyValuePair<Player, int>> sortedList = Points.OrderByDescending(x => x.Value).ToList();
 
 
         foreach (KeyValuePair<Player, int> pair in sortedList)
@@ -207,11 +210,11 @@ public class GameManager : MonoBehaviour
     private void AssignPoints()
     {
 
-        while (winningPlayers.Count != 0)
+        while (WinningPlayers.Count != 0)
         {
-            Player p = winningPlayers.Dequeue();
+            Player p = WinningPlayers.Dequeue();
             finishOrder.Add(p);
-            points[p] += WINNING_SCORE;
+            Points[p] += WINNING_SCORE;
         }
 
         while (deadPlayers.Count != 0)
@@ -221,19 +224,19 @@ public class GameManager : MonoBehaviour
 
         foreach (Player p in players)
         {
-            points[p] += (int)p.PlayerMaxHeight; //Tentative Scoring System
+            Points[p] += (int)p.PlayerMaxHeight; //Tentative Scoring System
 
         }
     }
 
-    
+
 
     public void StartClimbing()
     {
         if (players.Count == 0)
         {
             spawnPoint.SpawnPlayers();
-        } 
+        }
         else
         {
             foreach (Player p in players)
@@ -263,7 +266,7 @@ public class GameManager : MonoBehaviour
             pointBarObj.SetText("Player " + (i + 1));
 
             AssignPoints();
-            int newPoints = points[players[i]];
+            int newPoints = Points[players[i]];
 
             Debug.Log(newPoints);
 
@@ -272,7 +275,7 @@ public class GameManager : MonoBehaviour
         }
         CalculatePlayerOrder();
 
-        StartCoroutine(WaitForTime());
+        _ = StartCoroutine(WaitForTime());
     }
 
     private const int SHIFT = 5;
@@ -280,10 +283,10 @@ public class GameManager : MonoBehaviour
     private Vector2 CalculateSpawnPosition(int index)
     {
         float canvasWidth = pointsBackground.GetComponent<RectTransform>().rect.width;
-        float canvasHeight = pointsBackground.GetComponent<RectTransform>().rect.height;
+        _ = pointsBackground.GetComponent<RectTransform>().rect.height;
 
         // Example: Spacing the point bars evenly vertically
-        float xPosition = (index * SHIFT - 5) * (canvasWidth / (players.Count + 1));
+        float xPosition = ((index * SHIFT) - 5) * (canvasWidth / (players.Count + 1));
 
         return new Vector2(xPosition, 0f);
     }
@@ -291,12 +294,15 @@ public class GameManager : MonoBehaviour
     public IEnumerator WaitForTime()
     {
         yield return new WaitForSeconds(POINTS_SCREEN_DELAY);
+
+        GeneratePerkSelection();
         GameState = GameState.PERK;
     }
 
-    
+
     private void StartBuilding()
     {
+        perksCanvas.gameObject.SetActive(false);
         placeableCanvas.gameObject.SetActive(true);
 
         SetPlaceableText(players.Count - PlayerPointOrder.Count + 1);
@@ -309,7 +315,7 @@ public class GameManager : MonoBehaviour
             c.transform.SetParent(placeableCanvas.transform, false);
 
             c.GetComponent<RectTransform>().anchoredPosition = CalculatePlaceableSpawnPosition(players.Count - trapDraft.Count);
-           
+
             PlaceableClicker pcObj = c.GetComponent<PlaceableClicker>();
             pcObj.DisplayPlaceable = placeable;
         }
@@ -317,23 +323,28 @@ public class GameManager : MonoBehaviour
 
     public void SetPlaceableText(int i)
     {
-        placeableText.text = "Player " + (i) + " is placing";
+        placeableText.text = "Player " + i + " is placing";
+    }
+
+    public void SetPerkText(int i)
+    {
+        perksText.text = "Player " + i + " is selecting";
     }
 
     private Vector2 CalculatePlaceableSpawnPosition(int index)
     {
         float canvasWidth = pointsBackground.GetComponent<RectTransform>().rect.width;
-        float canvasHeight = pointsBackground.GetComponent<RectTransform>().rect.height;
+        _ = pointsBackground.GetComponent<RectTransform>().rect.height;
 
         // Example: Spacing the point bars evenly vertically
-        float xPosition = (index * SHIFT - 10) * (canvasWidth / (players.Count + 1));
+        float xPosition = ((index * SHIFT) - 10) * (canvasWidth / (players.Count + 1));
 
         return new Vector2(xPosition, 0f);
     }
 
     private void GenerateSelection()
     {
-        System.Random rnd = new System.Random();
+        System.Random rnd = new();
         for (int j = 0; j < players.Count; ++j)
         {
             int next = rnd.Next(PlacedPlaceables.Count);
@@ -341,16 +352,44 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void GeneratePerkSelection()
+    {
+        System.Random rnd = new();
+
+        for (int j = 0; j < players.Count; ++j)
+        {
+            int next = rnd.Next(Perks.Count);
+            perkDraft.Enqueue(Perks[next]);
+        }
+    }
+
     private void StartPerk()
     {
         pointsCanvas.gameObject.SetActive(false);
+        perksCanvas.gameObject.SetActive(true);
+
+        SetPerkText(players.Count - PlayerPointOrder.Count + 1);
+
+        while (perkDraft.Count != 0)
+        {
+            Perk perk = perkDraft.Dequeue();
+
+            GameObject c = Instantiate(perksPrefab);
+            c.transform.SetParent(perksCanvas.transform, false);
+
+            c.GetComponent<RectTransform>().anchoredPosition = CalculatePlaceableSpawnPosition(players.Count - perkDraft.Count);
+
+            Clicker pcObj = c.GetComponent<Clicker>();
+            pcObj.DisplayPerk = perk;
+
+            pcObj.DisplayImage();
+        }
 
         //eND OF PERK
         GenerateSelection();
-        GameState = GameState.BUILDING;
     }
 
-    
+
 
     public void StartPlacing()
     {
@@ -386,14 +425,14 @@ public class GameManager : MonoBehaviour
     // returns the world position (i.e. center) of the tile that contains rawPosition
     public static Vector3 SnapToWorldPosition(Vector3 rawPosition)
     {
-        Vector3 snappedPosition = new Vector3((float) Math.Floor(rawPosition.x) + 0.5f, (float)Math.Floor(rawPosition.y) + 0.5f, 0);
+        Vector3 snappedPosition = new((float)Math.Floor(rawPosition.x) + 0.5f, (float)Math.Floor(rawPosition.y) + 0.5f, 0);
         return snappedPosition;
     }
 
     // returns the game position (i.e. bottom-left) of the tile that contains rawPosition
     public static Vector3 SnapToGamePosition(Vector3 rawPosition)
     {
-        Vector3 snappedPosition = new Vector3((float)Math.Floor(rawPosition.x), (float)Math.Floor(rawPosition.y), 0);
+        Vector3 snappedPosition = new((float)Math.Floor(rawPosition.x), (float)Math.Floor(rawPosition.y), 0);
         return snappedPosition;
     }
 
@@ -408,7 +447,7 @@ public class GameManager : MonoBehaviour
     public GameState GameState
     {
         get => gameState;
-        set 
+        set
         {
             Debug.Log("Switching to " + value + " from " + gameState);
             gameState = value;
@@ -436,7 +475,7 @@ public class GameManager : MonoBehaviour
                     break;
 
             }
-        } 
+        }
     }
 
     private void StartEnding()
@@ -444,30 +483,15 @@ public class GameManager : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    public List<Perk> Perks
-    {
-        get => perks;
-    }
+    public List<Perk> Perks => perks;
 
-    public List<Player> Players
-    {
-        get => players;
-    }
+    public List<Player> Players => players;
 
-    public Dictionary<Player, int> Points
-    {
-        get => points;
-    }
+    public Dictionary<Player, int> Points { get; }
 
-    public Queue<Player> PlayerPointOrder
-    {
-        get => playerPointOrder;
-    }
+    public Queue<Player> PlayerPointOrder => playerPointOrder;
 
-    public List<Player> FinishOrder
-    {
-        get => finishOrder;
-    }
+    public List<Player> FinishOrder => finishOrder;
 
     public List<Placeable> PlacedPlaceables
     {
@@ -475,15 +499,9 @@ public class GameManager : MonoBehaviour
         set => placedPlaceables = value;
     }
 
-    public Stack<Player> DeadPlayers
-    {
-        get => deadPlayers;
-    }
+    public Stack<Player> DeadPlayers => deadPlayers;
 
-    public Queue<Player> WinningPlayers
-    {
-        get => winningPlayers;
-    }
+    public Queue<Player> WinningPlayers { get; }
 
     // EO Getters and Setters ===========================
 }
