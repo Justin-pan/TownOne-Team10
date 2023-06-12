@@ -79,6 +79,9 @@ public class Player : MonoBehaviour
     private bool stillHurt = false;
 
     private bool isGrounded;
+    private bool isMoving;
+    private bool isJumping;
+    private bool isFalling;
     private bool isDashReady;
     private bool isDashing;
 
@@ -105,9 +108,9 @@ public class Player : MonoBehaviour
 
     public void Update()
     {
-        // TODO
         if (!isDashing && !stillHurt && !isDead)
         {
+            m_PlayerState = PlayerState.Idle;
             HandleMove(Input.GetAxis(inputDirectionPrefix + PlayerID),
                 Input.GetButtonDown(inputJumpPrefix + PlayerID));
             HandleDash(Input.GetAxis(inputDirectionPrefix + PlayerID),
@@ -121,8 +124,12 @@ public class Player : MonoBehaviour
         switch(m_PlayerState)
         {
             case PlayerState.Idle:
+                m_Animator.SetBool("Idle", true);
+                m_Animator.SetBool("Moving", false);
                 break;
             case PlayerState.Moving:
+                m_Animator.SetBool("Idle", false);
+                m_Animator.SetBool("Moving", true);
                 break;
             case PlayerState.Jumping:
                 break;
@@ -186,8 +193,6 @@ public class Player : MonoBehaviour
 
     private void HandleMove(float inputDirection, bool inputJump)
     {
-        if (inputDirection != 0)
-            m_PlayerState = PlayerState.Moving;
         if (inputDirection > 0 && !facingRight)
             Flip();
         else if (inputDirection < 0 && facingRight)
@@ -199,14 +204,16 @@ public class Player : MonoBehaviour
         mRigidbody2D.velocity = Vector2.SmoothDamp(mRigidbody2D.velocity, target, ref currentVelocity,
             isGrounded ? 1 - traction : 1 - airTraction);
 
+        m_PlayerState = (mRigidbody2D.velocity.x != 0) ? PlayerState.Moving : m_PlayerState;
+
         if (isGrounded && inputJump)
         {
+            m_PlayerState = PlayerState.Jumping;
             Vector3 velocity = currentVelocity;
             velocity.y = jumpSpeed;
 
             mRigidbody2D.velocity = velocity;
             isGrounded = false;
-            m_PlayerState = PlayerState.Jumping;
         }
     }
 
@@ -221,6 +228,7 @@ public class Player : MonoBehaviour
 
             if (dashTarget != Vector2.zero)
             {
+                m_Animator.Play("PlayerDashAnimation", -1);
                 _ = StartCoroutine(DashController(dashTarget));
             }
         }
@@ -268,7 +276,7 @@ public class Player : MonoBehaviour
         mRigidbody2D.velocity = Vector2.zero;
         mRigidbody2D.gravityScale = gravityScale;
 
-         isDashing = false;
+        isDashing = false;
     }
 
     public void AddPerk(Perk p)

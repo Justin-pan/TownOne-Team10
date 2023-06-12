@@ -13,7 +13,7 @@ public class ExtraPoints : Perk
 
     public override void ApplyEffect(Player player)
     {
-        GameManager.Instance.Points[player] += 15;
+        GameManager.Instance.Points[player] += 30;
     }
 
 }
