@@ -6,6 +6,8 @@ public class CrumblyPlatform : MonoBehaviour
 {
     [SerializeField]
     private float m_CrumbleDelay = 2f;
+    [SerializeField]
+    private float m_ReappearDelay = 5f;
     private bool PlayerLanded = false;
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -21,7 +23,12 @@ public class CrumblyPlatform : MonoBehaviour
 
     private void Crumble()
     {
-        
-        Destroy(gameObject);
+        gameObject.SetActive(false);
+        Invoke("Reappear", m_ReappearDelay);
+    }
+
+    private void Reappear()
+    {
+        gameObject.SetActive(true);
     }
 }
