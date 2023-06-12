@@ -368,7 +368,7 @@ public class GameManager : MonoBehaviour
         pointsCanvas.gameObject.SetActive(false);
         perksCanvas.gameObject.SetActive(true);
 
-        SetPerkText(players.Count - PlayerPointOrder.Count + 1);
+        SetPerkText(FinishOrder[0].PlayerID + 1);
 
         while (perkDraft.Count != 0)
         {
