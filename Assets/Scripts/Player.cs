@@ -94,6 +94,7 @@ public class Player : MonoBehaviour
         currentVelocity = Vector2.zero;
         perks = new List<Perk>();
         m_PlayerState = PlayerState.Idle;
+        platformsLeft = 3;
 
         mRigidbody2D = GetComponent<Rigidbody2D>();
         m_Animator = GetComponent<Animator>();
