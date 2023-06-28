@@ -16,7 +16,6 @@ public class Player : MonoBehaviour
 
     [Range(0, 1)][SerializeField] public float traction;
     [Range(0, 1)][SerializeField] public float airTraction;
-    [SerializeField] public int placeablesPerRound;
 
     [Header("Technical")]
     [SerializeField] private string inputDirectionPrefix;
@@ -33,6 +32,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Placeable placeableToPlace;
 
     private int platformsLeft;
+    public const int MAX_PLATFORMS = 3;
 
     public int PlayerID { get; set; }
 
@@ -94,7 +94,7 @@ public class Player : MonoBehaviour
         currentVelocity = Vector2.zero;
         perks = new List<Perk>();
         m_PlayerState = PlayerState.Idle;
-        platformsLeft = 3;
+        platformsLeft = MAX_PLATFORMS;
 
         mRigidbody2D = GetComponent<Rigidbody2D>();
         m_Animator = GetComponent<Animator>();
@@ -290,6 +290,6 @@ public class Player : MonoBehaviour
         isDead = false;
         stillHurt = false;
         playerMaxHeight = 0;
-        platformsLeft = placeablesPerRound;
+        platformsLeft = MAX_PLATFORMS;
     }
 }
