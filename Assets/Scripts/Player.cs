@@ -291,5 +291,8 @@ public class Player : MonoBehaviour
         stillHurt = false;
         playerMaxHeight = 0;
         platformsLeft = MAX_PLATFORMS;
+        isGrounded = isDashReady = isDashing = false;
+        currentVelocity = Vector2.zero;
+        mRigidbody2D.gravityScale = 1;
     }
 }
