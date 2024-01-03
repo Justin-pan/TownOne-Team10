@@ -19,7 +19,7 @@ public class DynamicCamera : MonoBehaviour
     private const float SHIFT_SPEED = 3f;
     private Vector3 boundOffset = new Vector3(0, 0f, 0);
 
-    private float Y_SCALE_CONST = 1.1f;
+    private float Y_SCALE_CONST = 1.2f;
 
     [Header("Placement/Building Params")]
     private const float MAX_ZOOM = 8f;
@@ -70,9 +70,30 @@ public class DynamicCamera : MonoBehaviour
         transform.Translate(translation);
     }
 
+    private Vector3 CalculateCenter()
+    {
+        Vector3 sum = Vector3.zero;
+
+        int playersAlive = 0;
+
+        foreach (Player player in GameManager.Instance.Players)
+        {
+            if (!GameManager.Instance.DeadPlayers.Contains(player))
+            {
+                sum += player.transform.position;
+                ++playersAlive;
+            }
+        }
+
+        return sum / playersAlive;
+    }
+
     public Bounds CreateBound()
     {
-        bound = new Bounds(GameManager.Instance.Players[0].transform.position , Vector3.zero);
+
+        Vector3 averageCenter = CalculateCenter();
+
+        bound = new Bounds(averageCenter, Vector3.zero);
 
         foreach (Player player in GameManager.Instance.Players)
         {
@@ -107,7 +128,7 @@ public class DynamicCamera : MonoBehaviour
 
     public void SetCenter()
     {
-        Vector3 targetPosition = bound.center + boundOffset + new Vector3(0, 0, transform.position.z);
+        Vector3 targetPosition = CalculateCenter() + boundOffset + new Vector3(0, 0, transform.position.z);
         
         transform.position = new Vector3(Mathf.Lerp(transform.position.x, targetPosition.x, SHIFT_SPEED * Time.deltaTime), Mathf.Lerp(transform.position.y, targetPosition.y, SHIFT_SPEED * Time.deltaTime),
             Mathf.Lerp(transform.position.z, targetPosition.z, SHIFT_SPEED * Time.deltaTime));

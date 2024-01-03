@@ -415,9 +415,16 @@ public class GameManager : MonoBehaviour
         newPlacedGameObject.transform.parent = placeablesRoot.transform;
         newPlacedGameObject.transform.position = newPlacedPlaceable.GetCenterInWorldCoordinates();
         newPlacedPlaceable.GetSpaceTakenGameCoordinates(originPosition);
-        foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTaken())
+        try
         {
-            gamePositionPlaceableDic.Add(pos, newPlacedPlaceable);
+            foreach (Vector3 pos in newPlacedPlaceable.GetSpaceTaken())
+            {
+                gamePositionPlaceableDic.Add(pos, newPlacedPlaceable);
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Bad Placement Exception");
         }
         return true;
     }
